@@ -157,6 +157,16 @@ void SceneText::Init()
 	MeshBuilder::GetInstance()->GetMesh("SKYBOX_BOTTOM")->textureID = LoadTGA("Image//SkyBox//skybox_bottom.tga");
 	MeshBuilder::GetInstance()->GenerateRay("laser", 10.0f);
 
+	//Game objects
+	MeshBuilder::GetInstance()->GenerateOBJ("Alien", "OBJ//alien.obj");
+	MeshBuilder::GetInstance()->GetMesh("Alien")->textureID = LoadTGA("Image//alien.tga");
+	MeshBuilder::GetInstance()->GenerateOBJ("Safehouse", "OBJ//safehouse.obj");
+	MeshBuilder::GetInstance()->GetMesh("Safehouse")->textureID = LoadTGA("Image//safehouse.tga");
+	MeshBuilder::GetInstance()->GenerateOBJ("CloverBuilding", "OBJ//cloverbuilding.obj");
+	MeshBuilder::GetInstance()->GetMesh("CloverBuilding")->textureID = LoadTGA("Image//cloverbuilding.tga");
+	MeshBuilder::GetInstance()->GenerateOBJ("JigsawTower", "OBJ//JigsawTower.obj");
+	MeshBuilder::GetInstance()->GetMesh("JigsawTower")->textureID = LoadTGA("Image//jigsawbuilding.tga");
+
 	// Create entities into the scene
 	Create::Entity("reference", Vector3(0.0f, 0.0f, 0.0f)); // Reference
 	Create::Entity("lightball", Vector3(lights[0]->position.x, lights[0]->position.y, lights[0]->position.z)); // Lightball
