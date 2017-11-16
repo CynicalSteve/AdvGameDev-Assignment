@@ -5,7 +5,6 @@
 *.slo
 *.lo
 *.o
-*.obj
 
 # Precompiled Headers
 *.gch
@@ -30,9 +29,8 @@
 *.exe
 *.out
 *.app
-.vs/NYP_Framework/v15/.suo
-.vs/NYP_Framework/v15/ipch/AutoPCH/e0a0967302613688/ENTITYMANAGER.ipch
-.vs/NYP_Framework/v15/ipch/AutoPCH/90f6b63f6dfaf43c/OBJMESH.ipch
-.vs/NYP_Framework/v15/ipch/AutoPCH/f09283f102a82aab/SCENETEXT.ipch
-.vs/NYP_Framework/v15/Browse.VC.db
-.vs/NYP_Framework/v15/Solution.VC.db
+.vs/
+Debug/
+Base/Test/
+Base/Debug/
+Common/Debug/

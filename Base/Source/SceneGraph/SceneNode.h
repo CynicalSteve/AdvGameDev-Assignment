@@ -5,8 +5,9 @@
 using namespace std;
 
 #include "EntityBase.h"
+#include "Transform.h"
 
-class CSceneNode
+class CSceneNode : public CTransform
 {
 public:
 	CSceneNode(void);
@@ -48,6 +49,11 @@ public:
 	CSceneNode* GetEntity(const int ID);
 	// Return the number of children in this group
 	int GetNumOfChild(void);
+
+	// Update the Scene Graph
+	void Update(void);
+	// Render the Scene Graph
+	void Render(void);
 
 	// PrintSelf for debug purposes
 	void PrintSelf(const int numTabs = 0);
