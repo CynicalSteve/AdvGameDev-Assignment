@@ -31,6 +31,9 @@
     <Filter Include="SpatialPartition">
       <UniqueIdentifier>{997ad192-1c1a-4d95-b56a-b23e43e5d5fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="LevelOfDetails">
+      <UniqueIdentifier>{7950de97-e213-49cf-91da-515b1816fd43}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -111,6 +114,9 @@
     <ClCompile Include="Source\SpatialPartition\SpatialPartition.cpp">
       <Filter>SpatialPartition</Filter>
     </ClCompile>
+    <ClCompile Include="Source\LevelOfDetails\LevelOfDetails.cpp">
+      <Filter>LevelOfDetails</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -187,6 +193,9 @@
     </ClInclude>
     <ClInclude Include="Source\SpatialPartition\SpatialPartition.h">
       <Filter>SpatialPartition</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LevelOfDetails\LevelOfDetails.h">
+      <Filter>LevelOfDetails</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

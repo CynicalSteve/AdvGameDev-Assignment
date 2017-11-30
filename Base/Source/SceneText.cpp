@@ -39,6 +39,7 @@ SceneText::SceneText(SceneManager* _sceneMgr)
 
 SceneText::~SceneText()
 {
+	CSpatialPartition::GetInstance()->RemoveCamera();
 	CSceneGraph::GetInstance()->Destroy();
 }
 
@@ -160,6 +161,13 @@ void SceneText::Init()
 	MeshBuilder::GetInstance()->GenerateRay("laser", 10.0f);
 	MeshBuilder::GetInstance()->GenerateQuad("GRIDMESH", Color(1, 1, 1), 10.f);
 
+	// Set up the Spatial Partition and pass it to the EntityManager to manage
+	CSpatialPartition::GetInstance()->Init(100, 100, 10, 10);
+	CSpatialPartition::GetInstance()->SetMesh("GRIDMESH");
+	CSpatialPartition::GetInstance()->SetCamera(&camera);
+	CSpatialPartition::GetInstance()->SetLevelOfDetails(40000.0f, 160000.0f);
+	EntityManager::GetInstance()->SetSpatialPartition(CSpatialPartition::GetInstance());
+
 	//Game objects
 	MeshBuilder::GetInstance()->GenerateOBJ("Alien", "OBJ//alien.obj");
 	MeshBuilder::GetInstance()->GetMesh("Alien")->textureID = LoadTGA("Image//alien.tga");
@@ -170,10 +178,6 @@ void SceneText::Init()
 	MeshBuilder::GetInstance()->GenerateOBJ("JigsawTower", "OBJ//JigsawTower.obj");
 	MeshBuilder::GetInstance()->GetMesh("JigsawTower")->textureID = LoadTGA("Image//jigsawbuilding.tga");
 
-	// Set up the Spatial Partition and pass it to the EntityManager to manage
-	CSpatialPartition::GetInstance()->Init(100, 100, 10, 10);
-	CSpatialPartition::GetInstance()->SetMesh("GRIDMESH");
-	EntityManager::GetInstance()->SetSpatialPartition(CSpatialPartition::GetInstance());
 
 	// Create entities into the scene
 	Create::Entity("reference", Vector3(0.0f, 0.0f, 0.0f)); // Reference
@@ -182,6 +186,7 @@ void SceneText::Init()
 	GenericEntity* aCube = Create::Entity("cube", Vector3(-20.0f, 0.0f, -20.0f));
 	aCube->SetCollider(true);
 	aCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+	aCube->InitLOD("cube", "sphere", "cubeSG");
 
 	// Add the pointer to this new entity to the Scene Graph
 	CSceneNode* theNode = CSceneGraph::GetInstance()->AddNode(aCube);

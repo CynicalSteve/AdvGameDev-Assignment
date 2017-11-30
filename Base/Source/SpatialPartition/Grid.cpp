@@ -2,6 +2,7 @@
 #include "stdio.h"
 #include "MeshBuilder.h"
 #include "RenderHelper.h"
+#include "../GenericEntity.h"
 
 /********************************************************************************
 Constructor
@@ -14,6 +15,7 @@ CGrid::CGrid(void)
 	, max(Vector3(-1, -1, -1))
 	, theMesh(NULL)
 	, ListOfObjects(NULL)
+	, theDetailLevel(CLevelOfDetails::NO_DETAILS)
 {
 }
 
@@ -67,18 +69,19 @@ void CGrid::Update(vector<EntityBase*>* migrationList)
 	while (it != ListOfObjects.end())
 	{
 		Vector3 position = (*it)->GetPosition();
-		if (((min.x < position.x) && (position.x >= max.x)) &&
-			((min.z < position.z) && (position.z >= max.z)))
+
+		if (((min.x <= position.x) && (position.x <= max.x)) &&
+			((min.z <= position.z) && (position.z <= max.z)))
+		{
+			// Move on otherwise
+			++it;
+		}
+		else
 		{
 			migrationList->push_back(*it);
 
 			// Remove from this Grid
 			it = ListOfObjects.erase(it);
-		}
-		else
-		{
-			// Move on otherwise
-			++it;
 		}
 	}
 }
@@ -195,7 +198,7 @@ void CGrid::PrintSelf()
 	cout << "\tMin\t:\t" << min << "\tMax\t:\t" << max << endl;
 	if (ListOfObjects.size() > 0)
 	{
-		cout << "\tList of objects in this grid:" << endl;
+		cout << "\tList of objects in this grid: (LOD:" << this->theDetailLevel << ")" << endl;
 		cout << "\t------------------------------------------------------------------------" << endl;
 	}
 	for (int i = 0; i < ListOfObjects.size(); ++i)
@@ -205,4 +208,30 @@ void CGrid::PrintSelf()
 	if (ListOfObjects.size()>0)
 		cout << "\t------------------------------------------------------------------------" << endl;
 	cout << "********************************************************************************" << endl;
+}
+
+/********************************************************************************
+ Set the Level of Detail for objects in this CGrid
+ ********************************************************************************/
+void CGrid::SetDetailLevel(const CLevelOfDetails::DETAIL_LEVEL theDetailLevel)
+{
+	this->theDetailLevel = theDetailLevel;
+
+	if ((ListOfObjects.size() > 0) && (theDetailLevel == 0))
+	{
+		// Put a break-point here to trace and see that the entities in this CGrid are set to NO_DETAILS
+		int a = 0;
+	}
+	// Check each object to see if they are no longer in this grid
+	std::vector<EntityBase*>::iterator it;
+	it = ListOfObjects.begin();
+	while (it != ListOfObjects.end())
+	{
+		GenericEntity* theEntity = (GenericEntity*)(*it);
+		if (theEntity->GetLODStatus() == true)
+		{
+			theEntity->SetDetailLevel(theDetailLevel);
+		}
+		++it;
+	}
 }

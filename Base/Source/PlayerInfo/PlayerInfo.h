@@ -94,7 +94,7 @@ public:
 
 	// Handling Camera
 	void AttachCamera(FPSCamera* _cameraPtr);
-	void DetachCamera();
+	void DetachCamera(void);
 
 private:
 	Vector3 defaultPosition, defaultTarget, defaultUp;

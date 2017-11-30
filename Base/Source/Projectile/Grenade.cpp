@@ -58,6 +58,8 @@ void CGrenade::Update(double dt)
 			{
 				cout << "*** This Entity removed ***" << endl;
 			}
+
+
 		}
 		return;
 	}
