@@ -21,6 +21,10 @@ void EntityManager::Update(double _dt)
 	// Render the Scene Graph
 	CSceneGraph::GetInstance()->Update();
 
+	// Render the Spatial Partition
+	if (theSpatialPartition)
+		theSpatialPartition->Update();
+
 	// Check for Collision amongst entities with collider properties
 	CheckForCollision();
 
@@ -55,6 +59,10 @@ void EntityManager::Render()
 
 	// Render the Scene Graph
 	CSceneGraph::GetInstance()->Render();
+
+	// Render the Spatial Partition
+	if (theSpatialPartition)
+		theSpatialPartition->Render();
 }
 
 // Render the UI entities
@@ -70,9 +78,13 @@ void EntityManager::RenderUI()
 }
 
 // Add an entity to this EntityManager
-void EntityManager::AddEntity(EntityBase* _newEntity)
+void EntityManager::AddEntity(EntityBase* _newEntity, bool bAddToSpatialPartition)
 {
 	entityList.push_back(_newEntity);
+
+	// Add to the Spatial Partition
+	if (theSpatialPartition && bAddToSpatialPartition)
+		theSpatialPartition->Add(_newEntity);
 }
 
 // Remove an entity from this EntityManager
@@ -92,6 +104,12 @@ bool EntityManager::RemoveEntity(EntityBase* _existingEntity)
 		{
 			cout << "EntityManager::RemoveEntity: Unable to remove this entity from Scene Graph" << endl;
 		}
+		else
+		{
+			// Add to the Spatial Partition
+			if (theSpatialPartition)
+				theSpatialPartition->Remove(_existingEntity);
+		}
 
 		return true;	
 	}
@@ -99,14 +117,40 @@ bool EntityManager::RemoveEntity(EntityBase* _existingEntity)
 	return false;
 }
 
+// Mark an entity for deletion
+bool EntityManager::MarkForDeletion(EntityBase* _existingEntity)
+{
+	// Find the entity's iterator
+	std::list<EntityBase*>::iterator findIter = std::find(entityList.begin(), entityList.end(), _existingEntity);
+
+	// Delete the entity if found
+	if (findIter != entityList.end())
+	{
+		(*findIter)->SetIsDone(true);
+		return true;
+	}
+	// Return false if not found
+	return false;
+}
+
+// Set a handle to the Spatial Partition to this class
+void EntityManager::SetSpatialPartition(CSpatialPartition* theSpatialPartition)
+{
+	this->theSpatialPartition = theSpatialPartition;
+}
+
 // Constructor
 EntityManager::EntityManager()
+	: theSpatialPartition(NULL)
 {
 }
 
 // Destructor
 EntityManager::~EntityManager()
 {
+	// Drop the Spatial Partition instance
+	CSpatialPartition::GetInstance()->DropInstance();
+
 	// Clear out the Scene Graph
 	CSceneGraph::GetInstance()->Destroy();
 }
@@ -320,7 +364,6 @@ bool EntityManager::CheckForCollision(void)
 						(*colliderThis)->SetIsDone(true);
 						(*colliderThat)->SetIsDone(true);
 
-
 						// Remove from Scene Graph
 						if (CSceneGraph::GetInstance()->DeleteNode((*colliderThis)) == true)
 						{
@@ -359,6 +402,18 @@ bool EntityManager::CheckForCollision(void)
 						{
 							thisEntity->SetIsDone(true);
 							thatEntity->SetIsDone(true);
+
+							// Remove from Scene Graph
+							if (CSceneGraph::GetInstance()->DeleteNode((*colliderThis)) == true)
+							{
+								cout << "*** This Entity removed ***" << endl;
+							}
+							// Remove from Scene Graph
+							if (CSceneGraph::GetInstance()->DeleteNode((*colliderThat)) == true)
+							{
+								cout << "*** That Entity removed ***" << endl;
+							}
+
 						}
 					}
 				}

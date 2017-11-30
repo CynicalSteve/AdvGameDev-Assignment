@@ -7,6 +7,7 @@
 #include "../Projectile/Projectile.h"
 #include "../WeaponInfo/Pistol.h"
 #include "../WeaponInfo/LaserBlaster.h"
+#include "../WeaponInfo/GrenadeThrow.h"
 
 // Allocating and initializing CPlayerInfo's static data member.  
 // The pointer is allocated but not the object's constructor.
@@ -64,7 +65,9 @@ void CPlayerInfo::Init(void)
 	primaryWeapon = new CPistol();
 	primaryWeapon->Init();
 	// Set the laser blaster as the secondary weapon
-	secondaryWeapon = new CLaserBlaster();
+	//secondaryWeapon = new CLaserBlaster();
+	//secondaryWeapon->Init();
+	secondaryWeapon = new CGrenadeThrow();
 	secondaryWeapon->Init();
 }
 
@@ -205,6 +208,12 @@ Vector3 CPlayerInfo::GetUp(void) const
 double CPlayerInfo::GetJumpAcceleration(void) const
 {
 	return m_dJumpAcceleration;
+}
+
+// Get the terrain for the player info
+GroundEntity* CPlayerInfo::GetTerrain(void)
+{
+	return m_pTerrain;
 }
 
 // Update Jump Upwards
@@ -446,6 +455,7 @@ void CPlayerInfo::Update(double dt)
 	{
 		attachedCamera->SetCameraPos(position);
 		attachedCamera->SetCameraTarget(target);
+		attachedCamera->SetCameraUp(up);
 	}
 }
 
@@ -455,14 +465,14 @@ void CPlayerInfo::Constrain(void)
 	// Constrain player within the boundary
 	if (position.x > maxBoundary.x - 1.0f)
 		position.x = maxBoundary.x - 1.0f;
-	if (position.y > maxBoundary.y - 1.0f)
-		position.y = maxBoundary.y - 1.0f;
+	//if (position.y > maxBoundary.y - 1.0f)
+	//	position.y = maxBoundary.y - 1.0f;
 	if (position.z > maxBoundary.z - 1.0f)
 		position.z = maxBoundary.z - 1.0f;
 	if (position.x < minBoundary.x + 1.0f)
 		position.x = minBoundary.x + 1.0f;
-	if (position.y < minBoundary.y + 1.0f)
-		position.y = minBoundary.y + 1.0f;
+	//if (position.y < minBoundary.y + 1.0f)
+	//	position.y = minBoundary.y + 1.0f;
 	if (position.z < minBoundary.z + 1.0f)
 		position.z = minBoundary.z + 1.0f;
 
