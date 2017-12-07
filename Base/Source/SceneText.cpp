@@ -178,7 +178,6 @@ void SceneText::Init()
 	MeshBuilder::GetInstance()->GenerateOBJ("JigsawTower", "OBJ//JigsawTower.obj");
 	MeshBuilder::GetInstance()->GetMesh("JigsawTower")->textureID = LoadTGA("Image//jigsawbuilding.tga");
 
-
 	// Create entities into the scene
 	Create::Entity("reference", Vector3(0.0f, 0.0f, 0.0f)); // Reference
 	Create::Entity("lightball", Vector3(lights[0]->position.x, lights[0]->position.y, lights[0]->position.z)); // Lightball
@@ -203,7 +202,7 @@ void SceneText::Init()
 	{
 		cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
 	}
-
+	
 	GenericEntity* baseCube = Create::Asset("cube", Vector3(0.0f, 0.0f, 0.0f));
 	CSceneNode* baseNode = CSceneGraph::GetInstance()->AddNode(baseCube);
 
@@ -223,6 +222,10 @@ void SceneText::Init()
 	aRotateMtx->ApplyUpdate(1.0f, 0.0f, 0.0f, 1.0f);
 	aRotateMtx->SetSteps(-120, 60);
 	grandchildNode->SetUpdateTransformation(aRotateMtx);
+	
+	// Create a CEnemy instance
+	theEnemy = new CEnemy();
+	theEnemy->Init();
 
 	groundEntity = Create::Ground("GRASS_DARKGREEN", "GEO_GRASS_LIGHTGREEN");
 //	Create::Text3DObject("text", Vector3(0.0f, 0.0f, 0.0f), "DM2210", Vector3(10.0f, 10.0f, 10.0f), Color(0, 1, 1));
@@ -237,6 +240,7 @@ void SceneText::Init()
 	groundEntity->SetScale(Vector3(100.0f, 100.0f, 100.0f));
 	groundEntity->SetGrids(Vector3(10.0f, 1.0f, 10.0f));
 	playerInfo->SetTerrain(groundEntity);
+	theEnemy->SetTerrain(groundEntity);
 
 	// Setup the 2D entities
 	float halfWindowWidth = Application::GetInstance().GetWindowWidth() / 2.0f;
