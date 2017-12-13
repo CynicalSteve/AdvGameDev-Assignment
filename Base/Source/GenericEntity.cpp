@@ -53,14 +53,14 @@ GenericEntity* Create::Entity(	const std::string& _meshName,
 	result->SetPosition(_position);
 	result->SetScale(_scale);
 	result->SetCollider(false);
-	EntityManager::GetInstance()->AddEntity(result, true);
+	EntityManager::GetInstance()->AddEntity(result, true); //Is also added to spatial partition grids
 	return result;
 }
 
 GenericEntity* Create::Asset(	const std::string& _meshName,
 								const Vector3& _position,
 								const Vector3& _scale)
-{
+{ //Not added to spatial partition grids
 	Mesh* modelMesh = MeshBuilder::GetInstance()->GetMesh(_meshName);
 	if (modelMesh == nullptr)
 		return nullptr;
