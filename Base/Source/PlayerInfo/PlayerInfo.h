@@ -95,6 +95,17 @@ public:
 	// Handling Camera
 	void AttachCamera(FPSCamera* _cameraPtr);
 	void DetachCamera(void);
+	
+	enum InventoryWeapons
+	{
+		PISTOL = 0,
+		LASER,
+		GRENADE,
+		WEAPON_INVENTORY_TOTAL
+	};
+
+	CWeaponInfo* weaponInventory[InventoryWeapons::WEAPON_INVENTORY_TOTAL];
+	short currentWeapon;
 
 private:
 	Vector3 defaultPosition, defaultTarget, defaultUp;

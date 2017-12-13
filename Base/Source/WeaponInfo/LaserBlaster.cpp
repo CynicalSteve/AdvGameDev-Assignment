@@ -33,6 +33,8 @@ void CLaserBlaster::Init(void)
 	elapsedTime = 0.0;
 	// Boolean flag to indicate if weapon can fire now
 	bFire = true;
+
+	setWeaponID("LaserBlaster");
 }
 
 // Discharge this weapon

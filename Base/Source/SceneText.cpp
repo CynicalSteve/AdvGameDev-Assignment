@@ -322,14 +322,36 @@ void SceneText::Update(double dt)
 	if (MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_XOFFSET) != 0.0)
 	{
 		cout << "Mouse Wheel has offset in X-axis of " << MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_XOFFSET) << endl;
+		
+		
 	}
 	if (MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_YOFFSET) != 0.0)
 	{
 		cout << "Mouse Wheel has offset in Y-axis of " << MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_YOFFSET) << endl;
+
+		
+	}
+
+	if (KeyboardController::GetInstance()->IsKeyReleased('Q'))
+	{
+		playerInfo->currentWeapon--;
+	}
+
+	if (KeyboardController::GetInstance()->IsKeyReleased('E'))
+	{
+		playerInfo->currentWeapon++;
 	}
 	// <THERE>
 
 	// Update the player position and other details based on keyboard and mouse inputs
+	if (playerInfo->currentWeapon < 0)
+	{
+		playerInfo->currentWeapon = CPlayerInfo::InventoryWeapons::WEAPON_INVENTORY_TOTAL - 1;
+	}
+	else if (playerInfo->currentWeapon > CPlayerInfo::InventoryWeapons::WEAPON_INVENTORY_TOTAL - 1)
+	{
+		playerInfo->currentWeapon = 0;
+	}
 	playerInfo->Update(dt);
 
 	//camera.Update(dt); // Can put the camera into an entity rather than here (Then we don't have to write this)
@@ -348,6 +370,11 @@ void SceneText::Update(double dt)
 	ss1.precision(4);
 	ss1 << "Player:" << playerInfo->GetPos();
 	textObj[2]->SetText(ss1.str());
+
+	std::ostringstream ss2;
+	ss2.precision(4);
+	ss2 << "Current Weapon: " << playerInfo->weaponInventory[playerInfo->currentWeapon]->getWeaponID();
+	textObj[2]->SetText(ss2.str());
 }
 
 void SceneText::Render()

@@ -25,6 +25,8 @@ protected:
 	double elapsedTime;
 	// Boolean flag to indicate if weapon can fire now
 	bool bFire;
+
+	std::string weaponID;
 public:
 	// Set the number of ammunition in the magazine for this player
 	virtual void SetMagRound(const int magRounds);
@@ -68,6 +70,9 @@ public:
 	void Reload(void);
 	// Add rounds
 	void AddRounds(const int newRounds);
+
+	void setWeaponID(std::string newWeaponID);
+	std::string getWeaponID();
 
 	// Print Self
 	void PrintSelf(void);

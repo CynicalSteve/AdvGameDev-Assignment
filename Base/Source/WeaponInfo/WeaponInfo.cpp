@@ -191,6 +191,16 @@ void CWeaponInfo::AddRounds(const int newRounds)
 		totalRounds += newRounds;
 }
 
+void CWeaponInfo::setWeaponID(std::string newWeaponID)
+{
+	weaponID = newWeaponID;
+}
+
+std::string CWeaponInfo::getWeaponID()
+{
+	return weaponID;
+}
+
 // Print Self
 void CWeaponInfo::PrintSelf(void)
 {

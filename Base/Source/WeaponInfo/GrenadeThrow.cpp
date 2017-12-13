@@ -21,9 +21,9 @@ void CGrenadeThrow::Init(void)
 	// The maximum number of ammunition for this magazine for this weapon
 	maxMagRounds = 1;
 	// The current total number of rounds currently carried by this player
-	totalRounds = 2;
+	totalRounds = 100;
 	// The max total number of rounds currently carried by this player
-	maxTotalRounds = 2;
+	maxTotalRounds = 100;
 
 	// The time between shots
 	timeBetweenShots = 1.0;
@@ -31,6 +31,8 @@ void CGrenadeThrow::Init(void)
 	elapsedTime = 0.0;
 	// Boolean flag to indicate if weapon can fire now
 	bFire = true;
+
+	setWeaponID("Grenade");
 }
 
 // Discharge this weapon

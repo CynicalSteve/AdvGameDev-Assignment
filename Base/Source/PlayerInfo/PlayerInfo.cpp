@@ -26,7 +26,12 @@ CPlayerInfo::CPlayerInfo(void)
 	, m_pTerrain(NULL)
 	, primaryWeapon(NULL)
 	, secondaryWeapon(NULL)
+	, currentWeapon(InventoryWeapons::PISTOL)
 {
+	for (unsigned short i = 0; i < InventoryWeapons::WEAPON_INVENTORY_TOTAL; i++)
+	{
+		weaponInventory[i] = NULL;
+	}
 }
 
 CPlayerInfo::~CPlayerInfo(void)
@@ -41,6 +46,16 @@ CPlayerInfo::~CPlayerInfo(void)
 		delete primaryWeapon;
 		primaryWeapon = NULL;
 	}
+
+	for (unsigned short i = 0; i < InventoryWeapons::WEAPON_INVENTORY_TOTAL; i++)
+	{
+		if (weaponInventory[i])
+		{
+			delete weaponInventory[i];
+			weaponInventory[i] = NULL;
+		}
+	}
+
 	m_pTerrain = NULL;
 }
 
@@ -62,13 +77,22 @@ void CPlayerInfo::Init(void)
 	minBoundary.Set(-1, -1, -1);
 
 	// Set the pistol as the primary weapon
-	primaryWeapon = new CPistol();
-	primaryWeapon->Init();
+	/*primaryWeapon = new CPistol();
+	primaryWeapon->Init();*/
 	// Set the laser blaster as the secondary weapon
 	//secondaryWeapon = new CLaserBlaster();
 	//secondaryWeapon->Init();
-	secondaryWeapon = new CGrenadeThrow();
-	secondaryWeapon->Init();
+	/*secondaryWeapon = new CGrenadeThrow();
+	secondaryWeapon->Init();*/
+
+	weaponInventory[InventoryWeapons::PISTOL] = new CPistol();
+	weaponInventory[InventoryWeapons::PISTOL]->Init();
+
+	weaponInventory[InventoryWeapons::LASER] = new CLaserBlaster();
+	weaponInventory[InventoryWeapons::LASER]->Init();
+
+	weaponInventory[InventoryWeapons::GRENADE] = new CGrenadeThrow();
+	weaponInventory[InventoryWeapons::GRENADE]->Init();
 }
 
 // Returns true if the player is on ground
@@ -411,33 +435,38 @@ void CPlayerInfo::Update(double dt)
 	// Update the weapons
 	if (KeyboardController::GetInstance()->IsKeyReleased('R'))
 	{
-		if (primaryWeapon)
+		//if (primaryWeapon)
+		//{
+		//	primaryWeapon->Reload();
+		//	//primaryWeapon->PrintSelf();
+		//}
+		//if (secondaryWeapon)
+		//{
+		//	secondaryWeapon->Reload();
+		//	//secondaryWeapon->PrintSelf();
+		//}
+
+		if (weaponInventory[currentWeapon])
 		{
-			primaryWeapon->Reload();
-			//primaryWeapon->PrintSelf();
-		}
-		if (secondaryWeapon)
-		{
-			secondaryWeapon->Reload();
-			//secondaryWeapon->PrintSelf();
+			weaponInventory[currentWeapon]->Reload();
 		}
 	}
-	if (primaryWeapon)
-		primaryWeapon->Update(dt);
-	if (secondaryWeapon)
-		secondaryWeapon->Update(dt);
+	if (weaponInventory[currentWeapon])
+		weaponInventory[currentWeapon]->Update(dt);
+	/*if (secondaryWeapon)
+		secondaryWeapon->Update(dt);*/
 
 	// if Mouse Buttons were activated, then act on them
 	if (MouseController::GetInstance()->IsButtonPressed(MouseController::LMB))
 	{
-		if (primaryWeapon)
-			primaryWeapon->Discharge(position, target, this);
-	}
+		if (weaponInventory[currentWeapon])
+			weaponInventory[currentWeapon]->Discharge(position, target, this);
+	}/*
 	else if (MouseController::GetInstance()->IsButtonPressed(MouseController::RMB))
 	{
 		if (secondaryWeapon)
 			secondaryWeapon->Discharge(position, target, this);
-	}
+	}*/
 
 	// If the user presses R key, then reset the view to default values
 	if (KeyboardController::GetInstance()->IsKeyDown('P'))
