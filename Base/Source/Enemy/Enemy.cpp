@@ -29,8 +29,8 @@ void CEnemy::Init(void)
 	defaultUp.Set(0, 1, 0);
 
 	// Set the current values
-	position.Set(1.0f, -998.3f, 0.0f);
-	target.Set(0.0f, 1000.0f, -10.0f);
+	position.Set(10.0f, 0.0f, 0.0f);
+	target.Set(10.0f, 0.0f, 450.0f);
 	up.Set(0.0f, 1.0f, 0.0f);
 
 	// Set Boundary
@@ -120,17 +120,17 @@ GroundEntity* CEnemy::GetTerrain(void)
 void CEnemy::Update(double dt)
 {
 	Vector3 viewVector = (target - position).Normalized();
-	//position += viewVector * (float)m_dSpeed * (float)dt;
+	position += viewVector * (float)m_dSpeed * (float)dt;
 	//cout << position << "..." << viewVector << endl;
 
 	// Constrain the position
-	//Constrain();
+	Constrain();
 
-	//// Update the target
-	//if (position.z > 400.0f)
-	//	target.z = position.z * -1;
-	//else if (position.z < -400.0f)
-	//	target.z = position.z * -1;
+	// Update the target
+	if (position.z > 400.0f)
+		target.z = position.z * -1;
+	else if (position.z < -400.0f)
+		target.z = position.z * -1;
 }
 
 // Constrain the position within the borders
