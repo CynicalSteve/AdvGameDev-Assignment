@@ -35,6 +35,7 @@ CSceneNode* CSceneGraph::GetRoot()
 // Add a Node to this Scene Graph
 CSceneNode* CSceneGraph::AddNode(EntityBase* theEntity)
 {
+	theEntity->DoNotRender = true;
 	CSceneNode* aNewSceneNode = theRoot->AddChild(theEntity);
 //	aNewSceneNode->SetID(this->GenerateID());
 	return aNewSceneNode;

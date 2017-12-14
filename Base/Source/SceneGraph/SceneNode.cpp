@@ -78,6 +78,7 @@ CSceneNode* CSceneNode::AddChild(EntityBase* theEntity)
 {
 	if (theEntity)
 	{
+		theEntity->DoNotRender = true;
 		// Create a new Scene Node
 		CSceneNode* aNewNode = new CSceneNode();
 		// Set the entity to this new scene node
@@ -360,7 +361,7 @@ void CSceneNode::Render(void)
 	MS& modelStack = GraphicsManager::GetInstance()->GetModelStack();
 	modelStack.PushMatrix();
 
-		if (theEntity)
+		if (theEntity && !theEntity->IsDone())
 		{
 			//modelStack.LoadMatrix(this->GetTransform());
 			modelStack.MultMatrix(this->GetTransform());
@@ -376,10 +377,11 @@ void CSceneNode::Render(void)
 			cout << "[\t" << Mtx.a[3] << "\t" << Mtx.a[7] << "\t" << Mtx.a[11] << "\t" << Mtx.a[15] << "\t]" << endl;
 			cout << "======================================================================" << endl;
 			*/
-
-
-			// Render the entity
-			theEntity->Render();
+			 
+			
+				// Render the entity
+				theEntity->Render();
+			
 		}
 
 		// Render the children
