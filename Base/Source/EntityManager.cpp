@@ -54,7 +54,10 @@ void EntityManager::Render()
 	end = entityList.end();
 	for (it = entityList.begin(); it != end; ++it)
 	{
-		(*it)->Render();
+		if (!(*it)->DoNotRender)
+		{
+			(*it)->Render();
+		}
 	}
 
 	// Render the Scene Graph

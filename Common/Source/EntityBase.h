@@ -21,6 +21,7 @@ public:
 
 	bool IsDone();
 	void SetIsDone(const bool _value);
+	bool DoNotRender;
 
 	// Check if this entity has a collider class parent
 	virtual bool HasCollider(void) const;

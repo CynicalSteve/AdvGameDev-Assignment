@@ -203,29 +203,45 @@ void SceneText::Init()
 		cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
 	}
 	
-	GenericEntity* baseCube = Create::Asset("cube", Vector3(0.0f, 0.0f, 0.0f));
-	CSceneNode* baseNode = CSceneGraph::GetInstance()->AddNode(baseCube);
+	GenericEntity* heli = Create::Entity("cube", Vector3(0.0f, 0.0f, 0.0f), Vector3(10.f, 10.f, 20.f));
+	heli->SetCollider(true);
+	heli->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+	heli->InitLOD("cube", "sphere", "cubeSG");
+    CSceneNode* baseNode = CSceneGraph::GetInstance()->AddNode(heli);
+
+	GenericEntity* heliRotator = Create::Entity("cubeSG", Vector3(0.0f, 7.0f, .0f), Vector3(5.f, 5.f, 5.f));
+	heliRotator->SetCollider(true);
+	heliRotator->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+	heliRotator->InitLOD("cubeSG", "sphere", "cube");
+	CSceneNode* childNode = baseNode->AddChild(heliRotator);
 
 	CUpdateTransformation* baseMtx = new CUpdateTransformation();
-	baseMtx->ApplyUpdate(1.0f, 0.0f, 0.0f, 1.0f);
-	baseMtx->SetSteps(-60, 60);
-	baseNode->SetUpdateTransformation(baseMtx);
+	//baseMtx->ApplyUpdate(0.0f, .0f, -1.0f);
+	baseMtx->ApplyUpdate(5.0f, 0.0f, 1.0f, .0f);
+	//baseMtx->ApplyUpdate(0.0f, .0f, 5.0f);
+	baseMtx->SetSteps(INT_MIN, INT_MAX);
+	childNode->SetUpdateTransformation(baseMtx);
 
-	GenericEntity* childCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
-	CSceneNode* childNode = baseNode->AddChild(childCube);
-	childNode->ApplyTranslate(0.0f, 1.0f, 0.0f);
+	GenericEntity* heliBladeA = Create::Entity("cubeSG", Vector3(-10.0f, 7.0f, .0f), Vector3(20.f, 0.5f, 5.f));
+	heliBladeA->SetCollider(true);
+	heliBladeA->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+	heliBladeA->InitLOD("cubeSG", "sphere", "cube");
+	CSceneNode* grandchildNodeA = childNode->AddChild(heliBladeA);
 
-	GenericEntity* grandchildCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
-	CSceneNode* grandchildNode = childNode->AddChild(grandchildCube);
-	grandchildNode->ApplyTranslate(0.0f, 0.0f, 1.0f);
+	GenericEntity* heliBladeB = Create::Entity("cubeSG", Vector3(10.0f, 7.0f, .0f), Vector3(20.f, 0.5f, 5.f));
+	heliBladeB->SetCollider(true);
+	heliBladeB->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+	heliBladeB->InitLOD("cubeSG", "sphere", "cube");
+	CSceneNode* grandchildNodeB = childNode->AddChild(heliBladeB);
+	/*grandchildNode->ApplyTranslate(0.0f, 0.0f, 1.0f);
 	CUpdateTransformation* aRotateMtx = new CUpdateTransformation();
 	aRotateMtx->ApplyUpdate(1.0f, 0.0f, 0.0f, 1.0f);
 	aRotateMtx->SetSteps(-120, 60);
 	grandchildNode->SetUpdateTransformation(aRotateMtx);
-	
+	*/
 	// Create a CEnemy instance
-	theEnemy = new CEnemy();
-	theEnemy->Init();
+	/*theEnemy = new CEnemy();
+	theEnemy->Init();*/
 
 	groundEntity = Create::Ground("GRASS_DARKGREEN", "GEO_GRASS_LIGHTGREEN");
 //	Create::Text3DObject("text", Vector3(0.0f, 0.0f, 0.0f), "DM2210", Vector3(10.0f, 10.0f, 10.0f), Color(0, 1, 1));
@@ -240,7 +256,7 @@ void SceneText::Init()
 	groundEntity->SetScale(Vector3(100.0f, 100.0f, 100.0f));
 	groundEntity->SetGrids(Vector3(10.0f, 1.0f, 10.0f));
 	playerInfo->SetTerrain(groundEntity);
-	theEnemy->SetTerrain(groundEntity);
+	//theEnemy->SetTerrain(groundEntity);
 
 	// Setup the 2D entities
 	float halfWindowWidth = Application::GetInstance().GetWindowWidth() / 2.0f;
