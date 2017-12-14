@@ -131,8 +131,8 @@ void SceneText::Init()
 	MeshBuilder::GetInstance()->GenerateText("text", 16, 16);
 	MeshBuilder::GetInstance()->GetMesh("text")->textureID = LoadTGA("Image//calibri.tga");
 	MeshBuilder::GetInstance()->GetMesh("text")->material.kAmbient.Set(1, 0, 0);
-	MeshBuilder::GetInstance()->GenerateOBJ("Chair", "OBJ//chair.obj");
-	MeshBuilder::GetInstance()->GetMesh("Chair")->textureID = LoadTGA("Image//chair.tga");
+	MeshBuilder::GetInstance()->GenerateOBJ("Alien", "OBJ//alien.obj");
+	MeshBuilder::GetInstance()->GetMesh("Alien")->textureID = LoadTGA("Image//alien.tga");
 	MeshBuilder::GetInstance()->GenerateRing("ring", Color(1, 0, 1), 36, 1, 0.5f);
 	MeshBuilder::GetInstance()->GenerateSphere("lightball", Color(1, 1, 1), 18, 36, 1.f);
 	MeshBuilder::GetInstance()->GenerateSphere("sphere", Color(1, 0, 0), 18, 36, 0.5f);
@@ -179,7 +179,7 @@ void SceneText::Init()
 	MeshBuilder::GetInstance()->GetMesh("JigsawTower")->textureID = LoadTGA("Image//jigsawbuilding.tga");
 
 	// Create entities into the scene
-	Create::Entity("reference", Vector3(0.0f, 0.0f, 0.0f)); // Reference
+	//Create::Entity("reference", Vector3(0.0f, 0.0f, 0.0f)); // Reference
 	Create::Entity("lightball", Vector3(lights[0]->position.x, lights[0]->position.y, lights[0]->position.z)); // Lightball
 
 	GenericEntity* aCube = Create::Entity("cube", Vector3(-20.0f, 0.0f, -20.0f));
@@ -245,7 +245,7 @@ void SceneText::Init()
 
 	groundEntity = Create::Ground("GRASS_DARKGREEN", "GEO_GRASS_LIGHTGREEN");
 //	Create::Text3DObject("text", Vector3(0.0f, 0.0f, 0.0f), "DM2210", Vector3(10.0f, 10.0f, 10.0f), Color(0, 1, 1));
-	Create::Sprite2DObject("crosshair", Vector3(0.0f, 0.0f, 0.0f), Vector3(10.0f, 10.0f, 10.0f));
+	//Create::Sprite2DObject("crosshair", Vector3(0.0f, 0.0f, 0.0f), Vector3(10.0f, 10.0f, 10.0f));
 
 	SkyBoxEntity* theSkyBox = Create::SkyBox("SKYBOX_FRONT", "SKYBOX_BACK",
 											 "SKYBOX_LEFT", "SKYBOX_RIGHT",
@@ -267,7 +267,6 @@ void SceneText::Init()
 	{
 		textObj[i] = Create::Text2DObject("text", Vector3(-halfWindowWidth, -halfWindowHeight + fontSize*i + halfFontSize, 0.0f), "", Vector3(fontSize, fontSize, fontSize), Color(0.0f,1.0f,0.0f));
 	}
-	textObj[0]->SetText("HELLO WORLD");
 }
 
 void SceneText::Update(double dt)
@@ -380,17 +379,17 @@ void SceneText::Update(double dt)
 	ss.precision(5);
 	float fps = (float)(1.f / dt);
 	ss << "FPS: " << fps;
+	textObj[0]->SetText(ss.str());
+
+	ss.str("");
+	ss.precision(4);
+	ss << "Target:" << playerInfo->GetTarget();
 	textObj[1]->SetText(ss.str());
 
-	std::ostringstream ss1;
-	ss1.precision(4);
-	ss1 << "Player:" << playerInfo->GetPos();
-	textObj[2]->SetText(ss1.str());
-
-	std::ostringstream ss2;
-	ss2.precision(4);
-	ss2 << "Current Weapon: " << playerInfo->weaponInventory[playerInfo->currentWeapon]->getWeaponID();
-	textObj[2]->SetText(ss2.str());
+	ss.str("");
+	ss.precision(4);
+	ss << "Position:" << playerInfo->GetPos();
+	textObj[2]->SetText(ss.str());
 }
 
 void SceneText::Render()
