@@ -2,6 +2,7 @@
 #include "../EntityManager.h"
 #include "GraphicsManager.h"
 #include "RenderHelper.h"
+#include "../PlayerInfo/PlayerInfo.h"
 
 CEnemy::CEnemy()
 	: GenericEntity(NULL)
@@ -41,7 +42,7 @@ void CEnemy::Init(void)
 	m_dSpeed = 1.0;
 
 	// Initialise the LOD meshes
-	InitLOD("Alien", "sphere", "cubeSG");
+	InitLOD("HQAlien", "LQAlien", "cubeSG");
 
 	// Initialise the Collider
 	this->SetCollider(true);
@@ -158,12 +159,14 @@ void CEnemy::Render(void)
 	MS& modelStack = GraphicsManager::GetInstance()->GetModelStack();
 	modelStack.PushMatrix();
 	modelStack.Translate(position.x, position.y, position.z);
+	if (theDetailLevel == MID_DETAILS)
+		modelStack.Rotate(Math::RadianToDegree(atan2(CPlayerInfo::GetInstance()->GetPos().x - position.x, CPlayerInfo::GetInstance()->GetPos().z - position.z)), 0, 1, 0);
 	modelStack.Scale(scale.x, scale.y, scale.z);
 	if (GetLODStatus() == true)
 	{
 		if (theDetailLevel != NO_DETAILS)
 		{
-			//cout << theDetailLevel << endl;
+			cout << theDetailLevel << endl;
 			RenderHelper::RenderMesh(GetLODMesh());
 		}
 	}

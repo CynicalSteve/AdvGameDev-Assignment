@@ -131,8 +131,10 @@ void SceneText::Init()
 	MeshBuilder::GetInstance()->GenerateText("text", 16, 16);
 	MeshBuilder::GetInstance()->GetMesh("text")->textureID = LoadTGA("Image//calibri.tga");
 	MeshBuilder::GetInstance()->GetMesh("text")->material.kAmbient.Set(1, 0, 0);
-	MeshBuilder::GetInstance()->GenerateOBJ("Alien", "OBJ//alien.obj");
-	MeshBuilder::GetInstance()->GetMesh("Alien")->textureID = LoadTGA("Image//alien.tga");
+	MeshBuilder::GetInstance()->GenerateOBJ("HQAlien", "OBJ//alien.obj");
+	MeshBuilder::GetInstance()->GetMesh("HQAlien")->textureID = LoadTGA("Image//alien.tga");
+	MeshBuilder::GetInstance()->GenerateQuad("LQAlien", Color(1, 1, 1), 5.f);
+	MeshBuilder::GetInstance()->GetMesh("LQAlien")->textureID = LoadTGA("Image//alienFront.tga");
 	MeshBuilder::GetInstance()->GenerateRing("ring", Color(1, 0, 1), 36, 1, 0.5f);
 	MeshBuilder::GetInstance()->GenerateSphere("lightball", Color(1, 1, 1), 18, 36, 1.f);
 	MeshBuilder::GetInstance()->GenerateSphere("sphere", Color(1, 0, 0), 18, 36, 0.5f);
@@ -169,8 +171,6 @@ void SceneText::Init()
 	EntityManager::GetInstance()->SetSpatialPartition(CSpatialPartition::GetInstance());
 
 	//Game objects
-	MeshBuilder::GetInstance()->GenerateOBJ("Alien", "OBJ//alien.obj");
-	MeshBuilder::GetInstance()->GetMesh("Alien")->textureID = LoadTGA("Image//alien.tga");
 	MeshBuilder::GetInstance()->GenerateOBJ("Safehouse", "OBJ//safehouse.obj");
 	MeshBuilder::GetInstance()->GetMesh("Safehouse")->textureID = LoadTGA("Image//safehouse.tga");
 	MeshBuilder::GetInstance()->GenerateOBJ("CloverBuilding", "OBJ//cloverbuilding.obj");
@@ -240,8 +240,8 @@ void SceneText::Init()
 	grandchildNode->SetUpdateTransformation(aRotateMtx);
 	*/
 	// Create a CEnemy instance
-	/*theEnemy = new CEnemy();
-	theEnemy->Init();*/
+	theEnemy = new CEnemy();
+	theEnemy->Init();
 
 	groundEntity = Create::Ground("GRASS_DARKGREEN", "GEO_GRASS_LIGHTGREEN");
 //	Create::Text3DObject("text", Vector3(0.0f, 0.0f, 0.0f), "DM2210", Vector3(10.0f, 10.0f, 10.0f), Color(0, 1, 1));
@@ -256,7 +256,7 @@ void SceneText::Init()
 	groundEntity->SetScale(Vector3(100.0f, 100.0f, 100.0f));
 	groundEntity->SetGrids(Vector3(10.0f, 1.0f, 10.0f));
 	playerInfo->SetTerrain(groundEntity);
-	//theEnemy->SetTerrain(groundEntity);
+	theEnemy->SetTerrain(groundEntity);
 
 	// Setup the 2D entities
 	float halfWindowWidth = Application::GetInstance().GetWindowWidth() / 2.0f;
