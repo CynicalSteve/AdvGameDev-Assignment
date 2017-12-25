@@ -27,6 +27,9 @@ public:
 	virtual void Render();
 	virtual void Exit();
 
+	void AddHelicopters();
+	void AddBuildings();
+
 private:
 	SceneText(SceneManager* _sceneMgr); // This is used to register to SceneManager
 
