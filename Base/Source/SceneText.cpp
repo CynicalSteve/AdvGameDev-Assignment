@@ -244,14 +244,14 @@ void SceneText::Init()
 void SceneText::AddHelicopters()
 {
 	GenericEntity* heli = Create::Entity("cube", Vector3(0.0f, 0.0f, 0.0f), Vector3(10.f, 10.f, 20.f));
-	heli->SetCollider(true);
-	heli->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+	heli->SetCollider(false);
+	heli->SetAABB(Vector3(5.f, 5.f, 10.f), Vector3(-5.f, -5.f, -10.f));
 	heli->InitLOD("cube", "sphere", "cubeSG");
 	CSceneNode* baseNode = CSceneGraph::GetInstance()->AddNode(heli);
 
 	GenericEntity* heliRotator = Create::Entity("cubeSG", Vector3(0.0f, 7.0f, .0f), Vector3(5.f, 5.f, 5.f));
-	heliRotator->SetCollider(true);
-	heliRotator->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+	heliRotator->SetCollider(false);
+	heliRotator->SetAABB(Vector3(2.5f, 2.5f, 2.5f), Vector3(-2.5f, -2.5f, -2.5f));
 	heliRotator->InitLOD("cubeSG", "sphere", "cube");
 	CSceneNode* childNode = baseNode->AddChild(heliRotator);
 
@@ -264,32 +264,31 @@ void SceneText::AddHelicopters()
 	heliMove->SetSteps(INT_MIN, INT_MAX);
 
 	childNode->SetUpdateTransformation(baseMtx);
-	baseNode->SetUpdateTransformation(heliMove);
 
 	GenericEntity* heliBladeA = Create::Entity("cubeSG", Vector3(-10.0f, 7.0f, .0f), Vector3(20.f, 0.5f, 5.f));
-	heliBladeA->SetCollider(true);
-	heliBladeA->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+	heliBladeA->SetCollider(false);
+	heliBladeA->SetAABB(Vector3(10.f, 0.25f, 2.5f), Vector3(-10.f, -0.25f, -2.5f));
 	heliBladeA->InitLOD("cubeSG", "sphere", "cube");
 	CSceneNode* grandchildNodeA = childNode->AddChild(heliBladeA);
 
 	GenericEntity* heliBladeB = Create::Entity("cubeSG", Vector3(10.0f, 7.0f, .0f), Vector3(20.f, 0.5f, 5.f));
-	heliBladeB->SetCollider(true);
-	heliBladeB->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+	heliBladeB->SetCollider(false);
+	heliBladeB->SetAABB(Vector3(10.f, 0.25f, 0.25f), Vector3(-10.f, -0.25f, -0.25f));
 	heliBladeB->InitLOD("cubeSG", "sphere", "cube");
 	CSceneNode* grandchildNodeB = childNode->AddChild(heliBladeB);
 
 	//Second heli
 	{
-		GenericEntity* SecondHeli = Create::Entity("cube", Vector3(0.0f, 0.0f, .0f), Vector3(10.f, 10.f, 20.f));
-		heli->SetCollider(true);
-		heli->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
-		heli->InitLOD("cube", "sphere", "cubeSG");
+		GenericEntity* SecondHeli = Create::Entity("cube", Vector3(.0f, 0.0f, .0f), Vector3(10.f, 10.f, 20.f));
+		SecondHeli->SetCollider(true);
+		SecondHeli->SetAABB(Vector3(5.f, 5.f, 10.f), Vector3(-5.f, -5.f, -10.f));
+		SecondHeli->InitLOD("cube", "sphere", "cubeSG");
 		CSceneNode* HeliBaseNode = CSceneGraph::GetInstance()->AddNode(SecondHeli);
 
-		GenericEntity* SecondheliRotator = Create::Entity("cubeSG", Vector3(0.0f, 7.0f, .0f), Vector3(5.f, 5.f, 5.f));
-		heliRotator->SetCollider(true);
-		heliRotator->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
-		heliRotator->InitLOD("cubeSG", "sphere", "cube");
+		GenericEntity* SecondheliRotator = Create::Entity("cubeSG", Vector3(0.0f, 10.0f, .0f), Vector3(5.f, 5.f, 5.f));
+		SecondheliRotator->SetCollider(true);
+		SecondheliRotator->SetAABB(Vector3(2.5f, 2.5f, 2.5f), Vector3(-2.5f, -2.5f, -2.5f));
+		SecondheliRotator->InitLOD("cubeSG", "sphere", "cube");
 		CSceneNode* HelichildNode = HeliBaseNode->AddChild(SecondheliRotator);
 
 		CUpdateTransformation* baseMtx2 = new CUpdateTransformation();
@@ -297,16 +296,22 @@ void SceneText::AddHelicopters()
 		baseMtx2->SetSteps(INT_MIN, INT_MAX);
 		HelichildNode->SetUpdateTransformation(baseMtx2);
 
-		GenericEntity* SecondheliBladeA = Create::Entity("cubeSG", Vector3(-10.0f, 7.0f, .0f), Vector3(20.f, 0.5f, 5.f));
-		heliBladeA->SetCollider(true);
-		heliBladeA->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
-		heliBladeA->InitLOD("cubeSG", "sphere", "cube");
+	CUpdateTransformation* heliMove = new CUpdateTransformation();
+	heliMove->ApplyUpdate(.5f, .5f, .0f); //Transformation to whole heli
+	heliMove->SetSteps(INT_MIN, INT_MAX);
+
+	HeliBaseNode->SetUpdateTransformation(heliMove);
+
+		GenericEntity* SecondheliBladeA = Create::Entity("cubeSG", Vector3(-13.0f, 7.0f, .0f), Vector3(20.f, 0.5f, 5.f));
+		SecondheliBladeA->SetCollider(true);
+		SecondheliBladeA->SetAABB(Vector3(10.f, 0.25f, 2.5f), Vector3(-10.f, -0.25f, -2.5f));
+		SecondheliBladeA->InitLOD("cubeSG", "sphere", "cube");
 		CSceneNode* HeligrandchildNodeA = HelichildNode->AddChild(SecondheliBladeA);
 
-		GenericEntity* SecondheliBladeB = Create::Entity("cubeSG", Vector3(10.0f, 7.0f, .0f), Vector3(20.f, 0.5f, 5.f));
-		heliBladeB->SetCollider(true);
-		heliBladeB->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
-		heliBladeB->InitLOD("cubeSG", "sphere", "cube");
+		GenericEntity* SecondheliBladeB = Create::Entity("cubeSG", Vector3(13.0f, 7.0f, .0f), Vector3(20.f, 0.5f, 5.f));
+		SecondheliBladeB->SetCollider(true);
+		SecondheliBladeB->SetAABB(Vector3(10.f, 0.25f, 0.25f), Vector3(-10.f, -0.25f, -0.25f));
+		SecondheliBladeB->InitLOD("cubeSG", "sphere", "cube");
 		CSceneNode* HeligrandchildNodeB = HelichildNode->AddChild(SecondheliBladeB);
 	}
 }
@@ -315,19 +320,19 @@ void SceneText::AddBuildings()
 {
 	GenericEntity* BuildingBaseA = Create::Entity("cube", Vector3(50.0f, 0.0f, 50.0f), Vector3(25.f, 25.f, 25.f));
 	BuildingBaseA->SetCollider(true);
-	BuildingBaseA->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(0.5f, -0.5f, -0.5f));
+	BuildingBaseA->SetAABB(Vector3(12.5f, 12.5f, 12.5f), Vector3(-12.5f, -12.5f, -12.5f));
 	BuildingBaseA->InitLOD("cube", "sphere", "cubeSG");
 	CSceneNode* BuildingBaseNodeA = CSceneGraph::GetInstance()->AddNode(BuildingBaseA);
 
-	GenericEntity* BuildingBaseB = Create::Entity("cubeSG", Vector3(50.0f, 25.0f, 50.0f), Vector3(25.f, 25.f, 25.f));
+	GenericEntity* BuildingBaseB = Create::Entity("cubeSG", Vector3(50.0f, 35.0f, 50.0f), Vector3(25.f, 25.f, 25.f));
 	BuildingBaseB->SetCollider(true);
-	BuildingBaseB->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(0.5f, -0.5f, -0.5f));
+	BuildingBaseB->SetAABB(Vector3(12.5f, 12.5f, 12.5f), Vector3(-12.5f, -12.5f, -12.5f));
 	BuildingBaseB->InitLOD("cubeSG", "sphere", "cube");
 	CSceneNode* BuildingBaseNodeB = BuildingBaseNodeA->AddChild(BuildingBaseB);
 
-	GenericEntity* BuildingChild = Create::Entity("sphere", Vector3(50.0f, 50.0f, 50.0f), Vector3(25.f, 25.f, 25.f));
+	GenericEntity* BuildingChild = Create::Entity("sphere", Vector3(50.0f, 70.0f, 50.0f), Vector3(25.f, 25.f, 25.f));
 	BuildingChild->SetCollider(true);
-	BuildingChild->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+	BuildingChild->SetAABB(Vector3(12.5f, 12.5f, 0.5f), Vector3(-12.5f, -12.5f, -12.5f));
 	BuildingChild->InitLOD("sphere", "cube", "cubeSG");
 	CSceneNode* BuildingChildNode = BuildingBaseNodeB->AddChild(BuildingChild);
 	
