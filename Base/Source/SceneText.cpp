@@ -177,6 +177,8 @@ void SceneText::Init()
 	MeshBuilder::GetInstance()->GetMesh("CloverBuilding")->textureID = LoadTGA("Image//cloverbuilding.tga");
 	MeshBuilder::GetInstance()->GenerateOBJ("JigsawTower", "OBJ//JigsawTower.obj");
 	MeshBuilder::GetInstance()->GetMesh("JigsawTower")->textureID = LoadTGA("Image//jigsawbuilding.tga");
+	MeshBuilder::GetInstance()->GenerateQuad("GEO_PAVEMENT", Color(1, 1, 1), 1.f);
+	MeshBuilder::GetInstance()->GetMesh("GEO_PAVEMENT")->textureID = LoadTGA("Image//pavement.tga");
 
 	// Create entities into the scene
 	//Create::Entity("reference", Vector3(0.0f, 0.0f, 0.0f)); // Reference
@@ -216,7 +218,9 @@ void SceneText::Init()
 	theEnemy = new CEnemy();
 	theEnemy->Init();
 
-	groundEntity = Create::Ground("GRASS_DARKGREEN", "GEO_GRASS_LIGHTGREEN");
+
+	groundEntity = Create::Ground("GEO_PAVEMENT", "GEO_PAVEMENT");
+	//groundEntity = Create::Ground("GRASS_DARKGREEN", "GEO_GRASS_LIGHTGREEN");
 //	Create::Text3DObject("text", Vector3(0.0f, 0.0f, 0.0f), "DM2210", Vector3(10.0f, 10.0f, 10.0f), Color(0, 1, 1));
 	//Create::Sprite2DObject("crosshair", Vector3(0.0f, 0.0f, 0.0f), Vector3(10.0f, 10.0f, 10.0f));
 
