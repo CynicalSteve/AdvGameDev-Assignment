@@ -64,8 +64,8 @@ void EntityManager::Render()
 	CSceneGraph::GetInstance()->Render();
 
 	// Render the Spatial Partition
-	//if (theSpatialPartition)
-	//	theSpatialPartition->Render();
+	if (theSpatialPartition)
+		theSpatialPartition->Render();
 }
 
 // Render the UI entities
@@ -330,10 +330,11 @@ bool EntityManager::CheckLineSegmentPlane(	Vector3 line_start, Vector3 line_end,
 bool EntityManager::CheckForCollision(void)
 {
 	// Check for Collision
-	std::list<EntityBase*>::iterator colliderThis, colliderThat, colliderEnd;
+	std::list<EntityBase*>::iterator colliderThis, colliderThisEnd;
+	std::list<EntityBase*>::iterator colliderThat, colliderThatEnd;
 
-	colliderEnd = entityList.end();
-	for (colliderThis = entityList.begin(); colliderThis != colliderEnd; ++colliderThis)
+	colliderThisEnd = entityList.end();
+	for (colliderThis = entityList.begin(); colliderThis != colliderThisEnd; ++colliderThis)
 	{
 		// Check if this entity is a CLaser type
 		if ((*colliderThis)->GetIsLaser())
@@ -342,11 +343,13 @@ bool EntityManager::CheckForCollision(void)
 			CLaser* thisEntity = dynamic_cast<CLaser*>(*colliderThis);
 
 			// Check for collision with another collider class
-			//CSpatialPartition::GetInstance()->GetObjects((*colliderThat)->GetPosition(), 0);
+			colliderThatEnd = entityList.end();
 			int counter = 0;
-			colliderThat = colliderThis;
-			for (++colliderThat; colliderThat != colliderEnd; ++colliderThat)
+			for (colliderThat = entityList.begin(); colliderThat != colliderThatEnd; ++colliderThat)
 			{
+				if (colliderThat == colliderThis)
+					continue;
+
 				if ((*colliderThat)->HasCollider())
 				{
 					Vector3 hitPosition = Vector3(0, 0, 0);
@@ -387,11 +390,13 @@ bool EntityManager::CheckForCollision(void)
 			EntityBase *thisEntity = dynamic_cast<EntityBase*>(*colliderThis);
 
 			// Check for collision with another collider class
-			//CSpatialPartition::GetInstance()->GetObjects((*colliderThat)->GetPosition(), 0);
+			colliderThatEnd = entityList.end();
 			int counter = 0;
-			colliderThat = colliderThis;
-			for (++colliderThat; colliderThat != colliderEnd; ++colliderThat)
+			for (colliderThat = entityList.begin(); colliderThat != colliderThatEnd; ++colliderThat)
 			{
+				if (colliderThat == colliderThis)
+					continue;
+
 				if ((*colliderThat)->HasCollider())
 				{
 					EntityBase *thatEntity = dynamic_cast<EntityBase*>(*colliderThat);
