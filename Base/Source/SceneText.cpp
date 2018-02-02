@@ -191,7 +191,7 @@ void SceneText::Init()
 
 	// Add the pointer to this new entity to the Scene Graph
 	CSceneNode* theNode = CSceneGraph::GetInstance()->AddNode(aCube);
-	if (theNode == NULL)
+	if (theNode == nullptr)
 	{
 		cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
 	}
@@ -200,7 +200,7 @@ void SceneText::Init()
 	anotherCube->SetCollider(true);
 	anotherCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
 	CSceneNode* anotherNode = theNode->AddChild(anotherCube);
-	if (anotherNode == NULL)
+	if (anotherNode == nullptr)
 	{
 		cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
 	}

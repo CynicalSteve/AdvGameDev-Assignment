@@ -21,7 +21,7 @@ public:
 	CSceneNode* GetRoot();
 
 	// Add a Node to this Scene Graph
-	CSceneNode* AddNode(EntityBase* theEntity = NULL);
+	CSceneNode* AddNode(EntityBase* theEntity = nullptr);
 	// Delete a Node from this Scene Graph using the pointer to the node
 	bool DeleteNode(EntityBase* theEntity);
 	// Delete a Node from this Scene Graph using its ID

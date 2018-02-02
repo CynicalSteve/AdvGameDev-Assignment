@@ -14,10 +14,10 @@
 using namespace std;
 
 CGrenade::CGrenade(void)
-	: CProjectile(NULL)
+	: CProjectile(nullptr)
 	, m_fGravity(-10.0f)
 	, m_fElapsedTime(0.0f)
-	, m_pTerrain(NULL)
+	, m_pTerrain(nullptr)
 {
 }
 
@@ -25,15 +25,15 @@ CGrenade::CGrenade(Mesh* _modelMesh)
 	: CProjectile(_modelMesh)
 	, m_fGravity(-10.0f)
 	, m_fElapsedTime(0.0f)
-	, m_pTerrain(NULL)
+	, m_pTerrain(nullptr)
 {
 }
 
 CGrenade::~CGrenade(void)
 {
-	m_pTerrain = NULL; // Don't delete this as the terrain is deleted in CPlayerInfo
-	modelMesh = NULL;
-	theSource = NULL;
+	m_pTerrain = nullptr; // Don't delete this as the terrain is deleted in CPlayerInfo
+	modelMesh = nullptr;
+	theSource = nullptr;
 }
 
 // Update the status of this projectile

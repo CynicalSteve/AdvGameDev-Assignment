@@ -5,9 +5,9 @@
  Constructor
  ********************************************************************************/
 CLevelOfDetails::CLevelOfDetails()
-	: modelMesh_HighDetails(NULL)
-	, modelMesh_MidDetails(NULL)
-	, modelMesh_LowDetails(NULL)
+	: modelMesh_HighDetails(nullptr)
+	, modelMesh_MidDetails(nullptr)
+	, modelMesh_LowDetails(nullptr)
 	, m_bActive(false)
 	, theDetailLevel(HIGH_DETAILS)
 {
@@ -18,9 +18,9 @@ CLevelOfDetails::CLevelOfDetails()
  ********************************************************************************/
 CLevelOfDetails::~CLevelOfDetails()
 {
-	modelMesh_HighDetails = NULL;
-	modelMesh_MidDetails = NULL;
-	modelMesh_LowDetails = NULL;
+	modelMesh_HighDetails = nullptr;
+	modelMesh_MidDetails = nullptr;
+	modelMesh_LowDetails = nullptr;
 }
 
 /********************************************************************************
@@ -54,17 +54,17 @@ bool CLevelOfDetails::DestroyLOD(void)
 	if (modelMesh_HighDetails)
 	{
 		delete modelMesh_HighDetails;
-		modelMesh_HighDetails = NULL;
+		modelMesh_HighDetails = nullptr;
 	}
 	if (modelMesh_MidDetails)
 	{
 		delete modelMesh_MidDetails;
-		modelMesh_MidDetails = NULL;
+		modelMesh_MidDetails = nullptr;
 	}
 	if (modelMesh_LowDetails)
 	{
 		delete modelMesh_LowDetails;
-		modelMesh_LowDetails = NULL;
+		modelMesh_LowDetails = nullptr;
 	}
 	return false;
 }
@@ -113,7 +113,7 @@ Mesh* CLevelOfDetails::GetLODMesh(void) const
 		return modelMesh_MidDetails;
 	if (theDetailLevel == LOW_DETAILS)
 		return modelMesh_LowDetails;
-	return NULL;
+	return nullptr;
 }
 
 /********************************************************************************
@@ -127,7 +127,7 @@ Mesh* CLevelOfDetails::GetLODMesh(const DETAIL_LEVEL theDetailLevel) const
 		return modelMesh_MidDetails;
 	if (theDetailLevel == LOW_DETAILS)
 		return modelMesh_LowDetails;
-	return NULL;
+	return nullptr;
 }
 /********************************************************************************
  Get the current detail level

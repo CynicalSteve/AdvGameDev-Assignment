@@ -144,7 +144,7 @@ void EntityManager::SetSpatialPartition(CSpatialPartition* theSpatialPartition)
 
 // Constructor
 EntityManager::EntityManager()
-	: theSpatialPartition(NULL)
+	: theSpatialPartition(nullptr)
 {
 }
 

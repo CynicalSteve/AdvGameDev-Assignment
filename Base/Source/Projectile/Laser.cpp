@@ -10,7 +10,7 @@
 using namespace std;
 
 CLaser::CLaser(void)
-	: CProjectile(NULL)
+	: CProjectile(nullptr)
 	, m_fLength(0.0)
 	, angle_x(0.0)
 	, angle_y(0.0)
@@ -29,8 +29,8 @@ CLaser::CLaser(Mesh* _modelMesh)
 
 CLaser::~CLaser(void)
 {
-	modelMesh = NULL;
-	theSource = NULL;
+	modelMesh = nullptr;
+	theSource = nullptr;
 }
 
 // Set the length of the laser

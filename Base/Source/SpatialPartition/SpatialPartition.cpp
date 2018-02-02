@@ -20,7 +20,7 @@ CSpatialPartition *CSpatialPartition::sp_instance = 0;
  Constructor
  ********************************************************************************/
 CSpatialPartition::CSpatialPartition(void)
-	: theGrid(NULL)
+	: theGrid(nullptr)
 	, xSize(0)
 	, zSize(0)
 	, xGridSize(0)
@@ -29,7 +29,7 @@ CSpatialPartition::CSpatialPartition(void)
 	, zNumOfGrid(0)
 	, yOffset(0.0f)
 	, _meshName("")
-	, theCamera(NULL)
+	, theCamera(nullptr)
 {
 }
 
@@ -38,7 +38,7 @@ CSpatialPartition::CSpatialPartition(void)
  ********************************************************************************/
 CSpatialPartition::~CSpatialPartition(void)
 {
-	theCamera = NULL;
+	theCamera = nullptr;
 	delete [] theGrid;
 }
 
@@ -315,7 +315,7 @@ void CSpatialPartition::PrintSelf() const
 		}
 	}
 	else
-		cout << "theGrid : NULL" << endl;
+		cout << "theGrid : nullptr" << endl;
 	cout << "******* End of CSpatialPartition::PrintSelf() **********************************" << endl;
 }
 

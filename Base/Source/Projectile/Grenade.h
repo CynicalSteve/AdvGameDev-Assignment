@@ -34,6 +34,6 @@ namespace Create
 						const Vector3& _direction, 
 						const float m_fLifetime, 
 						const float m_fSpeed,
-						CPlayerInfo* _source = NULL);
+						CPlayerInfo* _source = nullptr);
 };
 

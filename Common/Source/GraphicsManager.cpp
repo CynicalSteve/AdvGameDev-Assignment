@@ -84,7 +84,7 @@ ShaderProgram* GraphicsManager::LoadShader(const std::string& _name, const std::
 	// Compile Vertex Shader
 	printf("Compiling shader : %s\n", _vertexFilePath.c_str());
 	char const * VertexSourcePointer = VertexShaderCode.c_str();
-	glShaderSource(VertexShaderID, 1, &VertexSourcePointer, NULL);
+	glShaderSource(VertexShaderID, 1, &VertexSourcePointer, nullptr);
 	glCompileShader(VertexShaderID);
 
 	GLint isCompiled = 0;
@@ -94,7 +94,7 @@ ShaderProgram* GraphicsManager::LoadShader(const std::string& _name, const std::
 		GLint maxLength = 0;
 		glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &maxLength);
 
-		// The maxLength includes the NULL character
+		// The maxLength includes the nullptr character
 		std::vector<GLchar> errorLog(maxLength);
 		glGetShaderInfoLog(VertexShaderID, maxLength, &maxLength, &errorLog[0]);
 
@@ -111,7 +111,7 @@ ShaderProgram* GraphicsManager::LoadShader(const std::string& _name, const std::
 	if (InfoLogLength > 0)
 	{
 		std::vector<char> VertexShaderErrorMessage(InfoLogLength + 1);
-		glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
+		glGetShaderInfoLog(VertexShaderID, InfoLogLength, nullptr, &VertexShaderErrorMessage[0]);
 		printf("%s\n", &VertexShaderErrorMessage[0]);
 		compileResult = false;
 	}
@@ -120,7 +120,7 @@ ShaderProgram* GraphicsManager::LoadShader(const std::string& _name, const std::
 	// Compile Fragment Shader
 	printf("Compiling shader : %s\n", _fragmentFilePath.c_str());
 	char const * FragmentSourcePointer = FragmentShaderCode.c_str();
-	glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer, NULL);
+	glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer, nullptr);
 	glCompileShader(FragmentShaderID);
 
 	GLint isFragmentCompiled = 0;
@@ -130,7 +130,7 @@ ShaderProgram* GraphicsManager::LoadShader(const std::string& _name, const std::
 		GLint maxLength = 0;
 		glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &maxLength);
 
-		// The maxLength includes the NULL character
+		// The maxLength includes the nullptr character
 		std::vector<GLchar> errorLog(maxLength);
 		glGetShaderInfoLog(FragmentShaderID, maxLength, &maxLength, &errorLog[0]);
 
@@ -145,7 +145,7 @@ ShaderProgram* GraphicsManager::LoadShader(const std::string& _name, const std::
 	// Compile Fragment Shader
 	printf("Compiling shader : %s\n", _fragmentFilePath.c_str());
 	char const * FragmentSourcePointer = FragmentShaderCode.c_str();
-	glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer, NULL);
+	glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer, nullptr);
 	glCompileShader(FragmentShaderID);
 
 	// Check Fragment Shader
@@ -154,7 +154,7 @@ ShaderProgram* GraphicsManager::LoadShader(const std::string& _name, const std::
 	if (InfoLogLength > 0)
 	{
 		std::vector<char> FragmentShaderErrorMessage(InfoLogLength + 1);
-		glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
+		glGetShaderInfoLog(FragmentShaderID, InfoLogLength, nullptr, &FragmentShaderErrorMessage[0]);
 		printf("%s\n", &FragmentShaderErrorMessage[0]);
 		compileResult = false;
 	}
@@ -175,7 +175,7 @@ ShaderProgram* GraphicsManager::LoadShader(const std::string& _name, const std::
 		GLint maxLength = 0;
 		glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &maxLength);
 
-		//The maxLength includes the NULL character
+		//The maxLength includes the nullptr character
 		std::vector<GLchar> infoLog(maxLength);
 		glGetProgramInfoLog(ProgramID, maxLength, &maxLength, &infoLog[0]);
 
@@ -202,7 +202,7 @@ ShaderProgram* GraphicsManager::LoadShader(const std::string& _name, const std::
 	if (InfoLogLength > 0)
 	{
 		std::vector<char> ProgramErrorMessage(InfoLogLength + 1);
-		glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
+		glGetProgramInfoLog(ProgramID, InfoLogLength, nullptr, &ProgramErrorMessage[0]);
 		printf("%s\n", &ProgramErrorMessage[0]);
 		compileResult = false;
 	}

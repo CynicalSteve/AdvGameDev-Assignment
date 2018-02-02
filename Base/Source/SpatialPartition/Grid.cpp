@@ -13,7 +13,7 @@ CGrid::CGrid(void)
 	, offset(Vector3(-1, -1, -1))
 	, min(Vector3(-1, -1, -1))
 	, max(Vector3(-1, -1, -1))
-	, theMesh(NULL)
+	, theMesh(nullptr)
 	, ListOfObjects(NULL)
 	, theDetailLevel(CLevelOfDetails::NO_DETAILS)
 {
@@ -27,7 +27,7 @@ CGrid::~CGrid(void)
 	if (theMesh)
 	{
 		delete theMesh;
-		theMesh = NULL;
+		theMesh = nullptr;
 	}
 	Remove();
 }
@@ -137,7 +137,7 @@ void CGrid::Remove(void)
 	{
 		// Do not delete the objects as they are stored in EntityManager and will be deleted there.
 		//delete ListOfObjects[i];
-		ListOfObjects[i] = NULL;
+		ListOfObjects[i] = nullptr;
 	}
 	ListOfObjects.clear();
 }

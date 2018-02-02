@@ -446,7 +446,7 @@ Mesh* MeshBuilder::GenerateOBJ(const std::string &meshName, const std::string &f
 	std::vector<Vector3> normals;
 	bool success = LoadOBJ(file_path.c_str(), vertices, uvs, normals);
 	if(!success)
-		return NULL;
+		return nullptr;
 
 	std::vector<Vertex> vertex_buffer_data;
 	std::vector<GLuint> index_buffer_data;

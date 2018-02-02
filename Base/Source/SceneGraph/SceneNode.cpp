@@ -7,8 +7,8 @@
 
 CSceneNode::CSceneNode(void)
 	: ID(-1)
-	, theEntity(NULL)
-	, theParent(NULL)
+	, theEntity(nullptr)
+	, theParent(nullptr)
 {
 }
 
@@ -29,8 +29,8 @@ void CSceneNode::Destroy(void)
 	}
 
 	// Reset the pointers for this node
-	theEntity = NULL;
-	theParent = NULL;
+	theEntity = nullptr;
+	theParent = nullptr;
 }
 
 // Set the ID for this node
@@ -92,7 +92,7 @@ CSceneNode* CSceneNode::AddChild(EntityBase* theEntity)
 		// Return this new scene node
 		return aNewNode;
 	}
-	return NULL;
+	return nullptr;
 }
 // Delete a child from this node using the pointer to the entity
 bool CSceneNode::DeleteChild(EntityBase* theEntity)
@@ -232,7 +232,7 @@ CSceneNode* CSceneNode::DetachChild(EntityBase* theEntity)
 			it++;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 // Detach a child from this node using its ID
 CSceneNode* CSceneNode::DetachChild(const int ID)
@@ -256,7 +256,7 @@ CSceneNode* CSceneNode::DetachChild(const int ID)
 			it++;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 // Get the entity inside this Scene Graph
 CSceneNode* CSceneNode::GetEntity(EntityBase* theEntity)
@@ -277,7 +277,7 @@ CSceneNode* CSceneNode::GetEntity(EntityBase* theEntity)
 			}
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 // Get a child from this node using its ID
 CSceneNode* CSceneNode::GetEntity(const int ID)
@@ -299,7 +299,7 @@ CSceneNode* CSceneNode::GetEntity(const int ID)
 			}
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 // Return the number of children in this group
 int CSceneNode::GetNumOfChild(void)

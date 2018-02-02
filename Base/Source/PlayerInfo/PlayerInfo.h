@@ -3,6 +3,7 @@
 #include "../FPSCamera.h"
 #include "../GroundEntity.h"
 #include "../WeaponInfo/WeaponInfo.h"
+#include "../Lua/LuaInterface.h"
 
 class CPlayerInfo
 {
@@ -22,7 +23,7 @@ public:
 		if (s_instance)
 		{
 			delete s_instance;
-			s_instance = NULL;
+			s_instance = nullptr;
 			return true;
 		}
 		return false;
@@ -128,4 +129,10 @@ private:
 
 	CWeaponInfo* primaryWeapon;
 	CWeaponInfo* secondaryWeapon;
+
+	//Keys to move player
+	char keyMoveForward;
+	char keyMoveBackward;
+	char keyMoveLeft;
+	char keyMoveRight;
 };

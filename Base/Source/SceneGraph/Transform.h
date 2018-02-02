@@ -45,7 +45,7 @@ public:
 	// Get the transformation matrix
 	Mtx44 GetTransform(void);
 	// Set the Update Transformation
-	void SetUpdateTransformation(CUpdateTransformation* theUpdateTransformation=NULL);
+	void SetUpdateTransformation(CUpdateTransformation* theUpdateTransformation=nullptr);
 	// Get the update transformation matrix
 	Mtx44 GetUpdateTransform(void);
 

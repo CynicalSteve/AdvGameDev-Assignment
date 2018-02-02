@@ -35,6 +35,6 @@ namespace Create
 					const float m_fLength, 
 					const float m_fLifetime, 
 					const float m_fSpeed,
-					CPlayerInfo* _source=NULL);
+					CPlayerInfo* _source=nullptr);
 };
 

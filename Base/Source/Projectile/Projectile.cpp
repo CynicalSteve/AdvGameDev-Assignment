@@ -6,12 +6,12 @@
 #include "RenderHelper.h"
 
 CProjectile::CProjectile(void)
-	: modelMesh(NULL)
+	: modelMesh(nullptr)
 	, m_bStatus(false)
 	, theDirection(0, 0, 0)
 	, m_fLifetime(-1.0f)
 	, m_fSpeed(10.0f)
-	, theSource(NULL)
+	, theSource(nullptr)
 {
 }
 
@@ -21,14 +21,14 @@ CProjectile::CProjectile(Mesh* _modelMesh)
 	, theDirection(0, 0, 0)
 	, m_fLifetime(-1)
 	, m_fSpeed(10.0f)
-	, theSource(NULL)
+	, theSource(nullptr)
 {
 }
 
 CProjectile::~CProjectile(void)
 {
-	modelMesh = NULL;
-	theSource = NULL;
+	modelMesh = nullptr;
+	theSource = nullptr;
 }
 
 // Activate the projectile. true == active, false == inactive

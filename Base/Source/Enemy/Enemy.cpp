@@ -5,7 +5,7 @@
 #include "../PlayerInfo/PlayerInfo.h"
 
 CEnemy::CEnemy()
-	: GenericEntity(NULL)
+	: GenericEntity(nullptr)
 	, defaultPosition(Vector3(0.0f,0.0f,0.0f))
 	, defaultTarget(Vector3(0.0f, 0.0f, 0.0f))
 	, defaultUp(Vector3(0.0f, 0.0f, 0.0f))
@@ -13,7 +13,7 @@ CEnemy::CEnemy()
 	, up(Vector3(0.0f, 0.0f, 0.0f))
 	, maxBoundary(Vector3(0.0f, 0.0f, 0.0f))
 	, minBoundary(Vector3(0.0f, 0.0f, 0.0f))
-	, m_pTerrain(NULL)
+	, m_pTerrain(nullptr)
 {
 }
 
@@ -87,7 +87,7 @@ void CEnemy::SetBoundary(Vector3 max, Vector3 min)
 // Set the terrain for the player info
 void CEnemy::SetTerrain(GroundEntity* m_pTerrain)
 {
-	if (m_pTerrain != NULL)
+	if (m_pTerrain != nullptr)
 	{
 		this->m_pTerrain = m_pTerrain;
 

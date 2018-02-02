@@ -6,7 +6,7 @@
 
 CSceneGraph::CSceneGraph(void)
 	: ID(0)
-	, theRoot(NULL)
+	, theRoot(nullptr)
 {
 	theRoot = new CSceneNode();
 	// Assign the first ID to the root. Default is 0
@@ -56,7 +56,7 @@ bool CSceneGraph::DeleteNode(const int ID)
 // Detach a Node from this Scene Graph using the pointer to the node
 CSceneNode* CSceneGraph::DetachNode(CSceneNode* theNode)
 {
-	return NULL;// theRoot->DetachChild(theNode);
+	return nullptr;// theRoot->DetachChild(theNode);
 }
 
 // Detach a Node from this Scene Graph using its ID

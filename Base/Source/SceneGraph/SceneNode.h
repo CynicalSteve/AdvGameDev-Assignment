@@ -32,15 +32,15 @@ public:
 	CSceneNode* GetParent(void) const;
 
 	// Add a child to this node
-	CSceneNode* AddChild(EntityBase* theEntity = NULL);
+	CSceneNode* AddChild(EntityBase* theEntity = nullptr);
 	// Delete a child from this node using the pointer to the entity
-	bool DeleteChild(EntityBase* theEntity = NULL);
+	bool DeleteChild(EntityBase* theEntity = nullptr);
 	// Delete a child from this node using its ID
 	bool DeleteChild(const int ID);
 	// Delete all children from this node using its ID
 	bool DeleteAllChildren(void);
 	// Detach a child from this node using the pointer to the node
-	CSceneNode* DetachChild(EntityBase* theEntity = NULL);
+	CSceneNode* DetachChild(EntityBase* theEntity = nullptr);
 	// Detach a child from this node using its ID
 	CSceneNode* DetachChild(const int ID);
 	// Get the entity inside this Scene Graph

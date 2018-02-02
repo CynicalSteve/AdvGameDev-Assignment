@@ -94,7 +94,7 @@ void CLuaInterface::Drop()
 	}
 }
 
-int CLuaInterface::getIntValue(const std::string Name)
+int CLuaInterface::getIntValue(const std::string &Name)
 {
 	if (!theLuaState)
 	{
@@ -106,7 +106,7 @@ int CLuaInterface::getIntValue(const std::string Name)
 	return lua_tointeger(theLuaState, -1);
 }
 
-float CLuaInterface::getFloatValue(const std::string Name)
+float CLuaInterface::getFloatValue(const std::string &Name)
 {
 	if (!theLuaState)
 	{
@@ -118,7 +118,78 @@ float CLuaInterface::getFloatValue(const std::string Name)
 	return (float)lua_tonumber(theLuaState, -1);
 }
 
-void CLuaInterface::saveIntValue(std::string Name, const int value, const bool overwrite)
+char CLuaInterface::getCharValue(const std::string &Name)
+{
+	lua_getglobal(theLuaState, Name.c_str());
+
+	size_t length;
+	const std::string string = lua_tolstring(theLuaState, -1, &length);
+
+	//If the string is not empty, then return the first char
+	if (length > 0)
+	{
+		return string[0];
+	}
+	else //else return a default value of a white space
+	{
+		return ' ';
+	}
+}
+
+Vector3 CLuaInterface::getVector3Values(const std::string &Name)
+{
+	//Find the name in lua file
+	lua_getglobal(theLuaState, Name.c_str());
+	
+	//Extract the first value from the variable container and places it into the lua stack
+	//The third parameter of rawgeti specifies the index of the container (starts from index 1, not 0)
+	lua_rawgeti(theLuaState, -1, 1);
+	//Assign the value which is at the top of stack to Pos x
+	const int x = lua_tonumber(theLuaState, -1);
+	//Pop the value from lua stack
+	lua_pop(theLuaState, 1); 
+
+	lua_rawgeti(theLuaState, -1, 2);
+	const int y = lua_tonumber(theLuaState, -1);
+	lua_pop(theLuaState, 1);
+
+	lua_rawgeti(theLuaState, -1, 3);
+	const int z = lua_tonumber(theLuaState, -1);
+	lua_pop(theLuaState, 1);
+
+	return Vector3(x, y, z);
+}
+
+float CLuaInterface::getDistanceSquareValue(const std::string & Name, const Vector3 & source, const Vector3 & destination)
+{
+	lua_getglobal(theLuaState, Name.c_str());
+	
+	//Push position vertices onto lua stack
+	lua_pushnumber(theLuaState, source.x);
+	lua_pushnumber(theLuaState, source.y);
+	lua_pushnumber(theLuaState, source.z);
+
+	lua_pushnumber(theLuaState, destination.x);
+	lua_pushnumber(theLuaState, destination.y);
+	lua_pushnumber(theLuaState, destination.z);
+
+	//Calls a function
+	//lua_call 2nd Parameter -> The number of arguments pushed onto stack 
+	//and are popped automatically after being passed as arguments
+	//3rd parameter -> the number of results
+	//The returned value is pushed onto the stack after function call
+	lua_call(theLuaState, 6, 1);
+	
+	//Take the retured value from the stack and assign it to local variable
+	const float distanceSquared = (float)lua_tonumber(theLuaState, -1);
+	//Pop the value from stack
+	lua_pop(theLuaState, 1);
+
+	return distanceSquared;
+
+}
+
+void CLuaInterface::saveIntValue(std::string Name, const int &value, const bool &overwrite)
 {
 	if (!theLuaState)
 	{
@@ -133,7 +204,7 @@ void CLuaInterface::saveIntValue(std::string Name, const int value, const bool o
 	lua_call(theLuaState, 2, 0);
 }
 
-void CLuaInterface::saveFloatValue(std::string Name, const float value, const bool overwrite)
+void CLuaInterface::saveFloatValue(std::string Name, const float &value, const bool &overwrite)
 {
 	if (!theLuaState)
 	{

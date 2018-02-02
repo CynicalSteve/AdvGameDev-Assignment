@@ -5,7 +5,7 @@ using namespace std;
 
 // Default Constructor
 CTransform::CTransform(void)
-	: theUpdateTransformation(NULL)
+	: theUpdateTransformation(nullptr)
 {
 	Mtx.SetToIdentity();
 	DefaultMtx.SetToIdentity();
@@ -23,7 +23,7 @@ CTransform::~CTransform(void)
 	if (theUpdateTransformation)
 	{
 		delete theUpdateTransformation;
-		theUpdateTransformation = NULL;
+		theUpdateTransformation = nullptr;
 	}
 }
 
@@ -135,7 +135,7 @@ void CTransform::SetUpdateTransformation(CUpdateTransformation* theUpdateTransfo
 // Get the update transformation matrix
 Mtx44 CTransform::GetUpdateTransform(void)
 {
-	if (theUpdateTransformation == NULL)
+	if (theUpdateTransformation == nullptr)
 		return DefaultMtx;
 
 	// Update theUpdateTransformation

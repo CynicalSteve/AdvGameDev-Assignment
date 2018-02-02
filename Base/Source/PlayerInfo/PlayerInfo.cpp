@@ -22,16 +22,22 @@ CPlayerInfo::CPlayerInfo(void)
 	, m_bFallDownwards(false)
 	, m_dFallSpeed(0.0)
 	, m_dFallAcceleration(-10.0)
-	, attachedCamera(NULL)
-	, m_pTerrain(NULL)
-	, primaryWeapon(NULL)
-	, secondaryWeapon(NULL)
+	, attachedCamera(nullptr)
+	, m_pTerrain(nullptr)
+	, primaryWeapon(nullptr)
+	, secondaryWeapon(nullptr)
 	, currentWeapon(InventoryWeapons::PISTOL)
 {
 	for (unsigned short i = 0; i < InventoryWeapons::WEAPON_INVENTORY_TOTAL; i++)
 	{
-		weaponInventory[i] = NULL;
+		weaponInventory[i] = nullptr;
 	}
+
+	//Default keys to move player
+	keyMoveForward = 'W';
+	keyMoveBackward = 'S';
+	keyMoveLeft = 'A';
+	keyMoveRight = 'D';
 }
 
 CPlayerInfo::~CPlayerInfo(void)
@@ -39,12 +45,12 @@ CPlayerInfo::~CPlayerInfo(void)
 	if (secondaryWeapon)
 	{
 		delete secondaryWeapon;
-		secondaryWeapon = NULL;
+		secondaryWeapon = nullptr;
 	}
 	if (primaryWeapon)
 	{
 		delete primaryWeapon;
-		primaryWeapon = NULL;
+		primaryWeapon = nullptr;
 	}
 
 	for (unsigned short i = 0; i < InventoryWeapons::WEAPON_INVENTORY_TOTAL; i++)
@@ -52,11 +58,11 @@ CPlayerInfo::~CPlayerInfo(void)
 		if (weaponInventory[i])
 		{
 			delete weaponInventory[i];
-			weaponInventory[i] = NULL;
+			weaponInventory[i] = nullptr;
 		}
 	}
 
-	m_pTerrain = NULL;
+	m_pTerrain = nullptr;
 }
 
 // Initialise this class instance
@@ -68,7 +74,7 @@ void CPlayerInfo::Init(void)
 	defaultUp.Set(0,1,0);
 
 	// Set the current values
-	position.Set(0, 0, 10);
+	position = CLuaInterface::GetInstance()->getVector3Values("PlayerStartingPos");
 	target.Set(0, 0, 0);
 	up.Set(0, 1, 0);
 
@@ -93,6 +99,14 @@ void CPlayerInfo::Init(void)
 
 	weaponInventory[InventoryWeapons::GRENADE] = new CGrenadeThrow();
 	weaponInventory[InventoryWeapons::GRENADE]->Init();
+
+	//init the custom keyboard inputs from lua
+	keyMoveForward = CLuaInterface::GetInstance()->getCharValue("moveForward");
+	keyMoveBackward = CLuaInterface::GetInstance()->getCharValue("moveBackward");
+	keyMoveLeft = CLuaInterface::GetInstance()->getCharValue("moveLeft");
+	keyMoveRight = CLuaInterface::GetInstance()->getCharValue("moveRight");
+
+	CLuaInterface::GetInstance()->getDistanceSquareValue("CalculateDistanceSquared", position, Vector3(10, 10, 10));
 }
 
 // Returns true if the player is on ground
@@ -184,7 +198,7 @@ void CPlayerInfo::SetBoundary(Vector3 max, Vector3 min)
 // Set the terrain for the player info
 void CPlayerInfo::SetTerrain(GroundEntity* m_pTerrain)
 {
-	if (m_pTerrain != NULL)
+	if (m_pTerrain != nullptr)
 	{
 		this->m_pTerrain = m_pTerrain;
 
@@ -303,29 +317,29 @@ void CPlayerInfo::Update(double dt)
 	double camera_pitch = mouse_diff_y * 0.0174555555555556;	// 3.142 / 180.0
 
 	// Update the position if the WASD buttons were activated
-	if (KeyboardController::GetInstance()->IsKeyDown('W') ||
-		KeyboardController::GetInstance()->IsKeyDown('A') ||
-		KeyboardController::GetInstance()->IsKeyDown('S') ||
-		KeyboardController::GetInstance()->IsKeyDown('D'))
+	if (KeyboardController::GetInstance()->IsKeyDown(keyMoveForward) ||
+		KeyboardController::GetInstance()->IsKeyDown(keyMoveLeft) ||
+		KeyboardController::GetInstance()->IsKeyDown(keyMoveBackward) ||
+		KeyboardController::GetInstance()->IsKeyDown(keyMoveRight))
 	{
 		Vector3 viewVector = target - position;
 		Vector3 rightUV;
-		if (KeyboardController::GetInstance()->IsKeyDown('W'))
+		if (KeyboardController::GetInstance()->IsKeyDown(keyMoveForward))
 		{
 			position += viewVector.Normalized() * (float)m_dSpeed * (float)dt;
 		}
-		else if (KeyboardController::GetInstance()->IsKeyDown('S'))
+		else if (KeyboardController::GetInstance()->IsKeyDown(keyMoveBackward))
 		{
 			position -= viewVector.Normalized() * (float)m_dSpeed * (float)dt;
 		}
-		if (KeyboardController::GetInstance()->IsKeyDown('A'))
+		if (KeyboardController::GetInstance()->IsKeyDown(keyMoveLeft))
 		{
 			rightUV = (viewVector.Normalized()).Cross(up);
 			rightUV.y = 0;
 			rightUV.Normalize();
 			position -= rightUV * (float)m_dSpeed * (float)dt;
 		}
-		else if (KeyboardController::GetInstance()->IsKeyDown('D'))
+		else if (KeyboardController::GetInstance()->IsKeyDown(keyMoveRight))
 		{
 			rightUV = (viewVector.Normalized()).Cross(up);
 			rightUV.y = 0;
