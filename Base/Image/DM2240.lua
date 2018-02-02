@@ -31,3 +31,8 @@ function CalculateDistanceSquared(x1, y1, z1, x2, y2, z2)
    print (distanceSquare)
    return distanceSquare
 end 
+
+--Waypoints
+Waypoint_A1 = {x=10.0, y=10.0, z=50.0}
+Waypoint_A2 = {x=10.0, y=0.0, z=50.0}
+Waypoint_A3 = {x=10.0, y=0.0, z=0.0}

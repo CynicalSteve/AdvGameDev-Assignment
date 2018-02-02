@@ -31,10 +31,12 @@ public:
 	char getCharValue(const std::string &Name);
 	Vector3 getVector3Values(const std::string &Name);
 	float getDistanceSquareValue(const std::string &Name, const Vector3 &source, const Vector3 &destination);
+	float GetField(const char *key);
 
 	void saveIntValue(std::string Name, const int &value, const bool &overwrite = false);
 	void saveFloatValue(std::string Name, const float &value, const bool &overwrite = false);
 	
+	void error(const std::string &errorCode);
 
 protected:
 
@@ -42,4 +44,5 @@ protected:
 
 	//Pointer to the Lua State
 	lua_State *theLuaState;
+	lua_State *theErrorState;
 };

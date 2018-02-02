@@ -11,6 +11,7 @@
 #include "GenericEntity.h"
 #include "SceneGraph/UpdateTransformation.h"
 #include "Enemy\Enemy.h"
+#include "Lua\LuaInterface.h"
 
 class ShaderProgram;
 class SceneManager;

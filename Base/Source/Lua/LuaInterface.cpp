@@ -57,6 +57,17 @@ bool CLuaInterface::Init()
 		result = true;
 	}
 
+	theErrorState = lua_open();
+
+	if (theLuaState && theErrorState)
+	{
+		//Load lua auxiliary libraries
+		luaL_openlibs(theLuaState);
+
+		//Load the error lua script
+		luaL_dofile(theErrorState, "Image//errorLookup.lua");
+	}
+
 	return result;
 }
 
@@ -189,6 +200,31 @@ float CLuaInterface::getDistanceSquareValue(const std::string & Name, const Vect
 
 }
 
+float CLuaInterface::GetField(const char * key)
+{
+	//Error Check - whether the variables in the stack belong to a table
+	if (!lua_istable(theLuaState, -1))
+	{
+		error("error100");
+		return 0;
+	}
+
+	lua_pushstring(theLuaState, key);
+	lua_gettable(theLuaState, -2);
+
+	//Error check - returned value is not a number
+	if (!lua_isnumber(theLuaState, - 1))
+	{
+		error("error101");
+		return 0;
+	}
+	
+	int result = static_cast<int>(lua_tonumber(theLuaState, -1));
+	lua_pop(theLuaState, 1);
+
+	return result;
+}
+
 void CLuaInterface::saveIntValue(std::string Name, const int &value, const bool &overwrite)
 {
 	if (!theLuaState)
@@ -217,4 +253,25 @@ void CLuaInterface::saveFloatValue(std::string Name, const float &value, const b
 	lua_pushstring(theLuaState, Name.c_str());
 	lua_pushinteger(theLuaState, overwrite);
 	lua_call(theLuaState, 2, 0);
+}
+
+void CLuaInterface::error(const std::string & errorCode)
+{
+	if (!theErrorState)
+	{
+		return;
+	}
+
+	lua_getglobal(theErrorState, errorCode.c_str());
+
+	const std::string errorMsg = lua_tostring(theErrorState, -1);
+
+	if (!errorMsg.empty())
+	{
+		printf_s("%s\n", errorMsg.c_str());
+	}
+	else
+	{
+		printf_s("Error Code: %s is an unkown error!\n", errorCode.c_str());
+	}
 }
