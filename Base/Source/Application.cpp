@@ -1,7 +1,7 @@
 #include "Application.h"
 #include "MouseController.h"
 #include "KeyboardController.h"
-#include "SceneManager.h"
+#include "GameStateManagement\SceneManager.h"
 #include "GraphicsManager.h"
 #include "ShaderProgram.h"
  
@@ -109,7 +109,7 @@ void Application::Init()
 
 	//Get the OpenGL resolution
 	m_window_width = CLuaInterface::GetInstance()->getIntValue("width");
-	m_window_width = CLuaInterface::GetInstance()->getIntValue("height");
+	m_window_height = CLuaInterface::GetInstance()->getIntValue("height");
 
 	CLuaInterface::GetInstance()->Run();
 	CLuaInterface::GetInstance()->saveFloatValue("Player1", 200.10f, true);
@@ -198,11 +198,11 @@ void Application::Run()
 		
 		PostInputUpdate();
 	}
-	SceneManager::GetInstance()->Exit();
 }
 
 void Application::Exit()
 {
+	SceneManager::GetInstance()->Exit();
 	//Drop the Lua system
 	CLuaInterface::GetInstance()->Drop();
 	//Close OpenGL window and terminate GLFW

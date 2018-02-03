@@ -6,6 +6,7 @@
 #include "MatrixStack.h"
 #include "../FPSCamera.h"
 #include "../SpriteEntity.h"
+#include "../Lua/LuaInterface.h"
 
 class SceneManager;
 
@@ -23,4 +24,17 @@ public:
 private:
 	FPSCamera camera;
 	SpriteEntity *MenuStateBackground;
+	SpriteEntity *ButtonBorder;
+
+	enum ButtonState
+	{
+		STATE_PLAY_GAME = 0,
+		STATE_OPTIONS,
+		STATE_HIGHSCORES,
+		STATE_EXIT,
+
+		STATES_TOTAL
+	};
+
+	ButtonState buttonState;
 };

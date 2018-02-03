@@ -6,6 +6,7 @@
 #include "MatrixStack.h"
 #include "../FPSCamera.h"
 #include "../SpriteEntity.h"
+#include "../Lua/LuaInterface.h"
 
 class SceneManager;
 

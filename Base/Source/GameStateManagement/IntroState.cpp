@@ -32,11 +32,11 @@ void CIntroState::Init()
 	//Load all the meshes
 	MeshBuilder::GetInstance()->GenerateQuad("INTROSTATE_BKGROUND", Color(1, 1, 1), 1.f);
 	MeshBuilder::GetInstance()->GetMesh("INTROSTATE_BKGROUND")->textureID = LoadTGA("Image//IntroState.tga");
-	float halfWindowWidth = Application::GetInstance().GetWindowWidth() / 2.f;
-	float halfWindowHeight = Application::GetInstance().GetWindowHeight() / 2.f;
+	float halfWindowWidth = Application::GetInstance().GetWindowWidth() * .5f;
+	float halfWindowHeight = Application::GetInstance().GetWindowHeight() * .5f;
 	IntroStateBackground = Create::Sprite2DObject("INTROSTATE_BKGROUND",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.f),
-		Vector3(800.f, 600.f, 0.f)
+		Vector3(Application::GetInstance().GetWindowWidth(), Application::GetInstance().GetWindowHeight(), 0.f)
 	);
 
 	cout << "CIntroState Loaded\n";
@@ -44,9 +44,10 @@ void CIntroState::Init()
 
 void CIntroState::Update(double dt)
 {
-	if (KeyboardController::GetInstance()->IsKeyReleased(VK_SPACE))
+	
+
+	if (KeyboardController::GetInstance()->IsKeyReleased(VK_RETURN))
 	{
-		cout << "Loading MenuState\n";
 		SceneManager::GetInstance()->SetActiveScene("MenuState");
 	}
 }

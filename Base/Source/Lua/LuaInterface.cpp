@@ -30,7 +30,7 @@ bool CLuaInterface::DropInstance()
 	if (s_instance)
 	{
 		//Drop the Lua Interface class
-		s_instance->Drop();
+		s_instance->DropAll();
 
 		delete s_instance;
 		s_instance = nullptr;
@@ -96,12 +96,28 @@ void CLuaInterface::Run()
 	cout << "Height of screen" << height << "\n";
 }
 
-void CLuaInterface::Drop()
+void CLuaInterface::Drop(lua_State *luaStateToDrop)
+{
+	if (luaStateToDrop)
+	{
+		//close Lua State
+		lua_close(luaStateToDrop);
+		luaStateToDrop = nullptr;
+	}
+}
+
+void CLuaInterface::DropAll()
 {
 	if (theLuaState)
 	{
-		//close Lua State
 		lua_close(theLuaState);
+		theLuaState = nullptr;
+	}
+
+	if (theErrorState)
+	{
+		lua_close(theErrorState);
+		theErrorState = nullptr;
 	}
 }
 
@@ -274,4 +290,31 @@ void CLuaInterface::error(const std::string & errorCode)
 	{
 		printf_s("Error Code: %s is an unkown error!\n", errorCode.c_str());
 	}
+}
+
+#include <assert.h>
+void CLuaInterface::SetLuaFile(const std::string &NewLuaFileName, lua_State *luaState = nullptr)
+{
+	//If the the lua state to change is not indicated, default to theLuaState
+	if (!luaState)
+	{
+		luaState = theLuaState;
+	}
+
+	//Close the lua interface
+	Drop(luaState);
+
+	//Create the lua state
+	luaState = lua_open();
+
+	if (luaState)
+	{
+		//Load lua auxiliary libraries
+		luaL_openlibs(luaState);
+
+		//Load lua scripts
+		luaL_dofile(luaState, NewLuaFileName.c_str());
+	}
+
+	assert(luaState != nullptr && "A lua state interface is null!\n");
 }

@@ -23,8 +23,10 @@ public:
 	//Run Lua Interface Class
 	void Run();
 
-	//Drop the Lua Interface Class
-	void Drop();
+	//Drop a specific lua interface
+	void Drop(lua_State *luaStateToDrop);
+	//Drop all interfaces
+	void DropAll();
 
 	int getIntValue(const std::string &Name);
 	float getFloatValue(const std::string &Name);
@@ -37,6 +39,8 @@ public:
 	void saveFloatValue(std::string Name, const float &value, const bool &overwrite = false);
 	
 	void error(const std::string &errorCode);
+
+	void SetLuaFile(const std::string &NewLuaFileName, lua_State *luaState = nullptr);
 
 protected:
 

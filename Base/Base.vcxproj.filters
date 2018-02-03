@@ -138,6 +138,9 @@
     <ClCompile Include="Source\Lua\LuaInterface.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
+    <ClCompile Include="Source\GameStateManagement\SceneManager.cpp">
+      <Filter>GameStateManagement</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -244,6 +247,9 @@
     </ClInclude>
     <ClInclude Include="Source\Lua\LuaInterface.h">
       <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameStateManagement\SceneManager.h">
+      <Filter>GameStateManagement</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
