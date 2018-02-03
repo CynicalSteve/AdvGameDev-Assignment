@@ -1,4 +1,4 @@
-PlayGameButton={posX=0,posY=0,scaleX=10,scaleY=10}
-OptionsButton={0,0,10}
-HighscoreButton={0,0,10}
-ExitButton={0,0,10}
+PlayGameButton={posY=600,scaleX=400,scaleY=150}
+OptionsButton={posY=450, scaleX=400,scaleY=150}
+HighscoreButton={posY=300, scaleX=400,scaleY=150}
+ExitButton={posY=150,scaleX=400,scaleY=150}

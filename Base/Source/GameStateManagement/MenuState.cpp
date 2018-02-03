@@ -28,16 +28,19 @@ void CMenuState::Init()
 	//Create and attach the camera to the scene
 	camera.Init(Vector3(0, 0, 10), Vector3(0, 0, 0), Vector3(0, 1, 0));
 	GraphicsManager::GetInstance()->AttachCamera(&camera);
-
-	//Init the lua state interface to DM2240.lua
-	CLuaInterface::GetInstance()->SetLuaFile("Image//DM2240.lua");
 	
+	glDisable(GL_DEPTH_TEST);
+
+	//Init the lua state interface to MenuData.lua
+	CLuaInterface::GetInstance()->SetLuaFile("Image//MenuData.lua", CLuaInterface::GetInstance()->theLuaState);
+
+	halfWindowWidth = Application::GetInstance().GetWindowWidth() * .5f;
+	halfWindowHeight = Application::GetInstance().GetWindowHeight() * .5f;
+
 	//Load all the meshes
 	//Main menu Background
 	MeshBuilder::GetInstance()->GenerateQuad("MENUSTATE_BKGROUND", Color(1, 1, 1), 1.f);
 	MeshBuilder::GetInstance()->GetMesh("MENUSTATE_BKGROUND")->textureID = LoadTGA("Image//MenuState.tga");
-	float halfWindowWidth = Application::GetInstance().GetWindowWidth() / 2.f;
-	float halfWindowHeight = Application::GetInstance().GetWindowHeight() / 2.f;
 	MenuStateBackground = Create::Sprite2DObject("MENUSTATE_BKGROUND",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.f),
 		Vector3(Application::GetInstance().GetWindowWidth(), Application::GetInstance().GetWindowHeight(), 0.f)
@@ -48,18 +51,45 @@ void CMenuState::Init()
 	MeshBuilder::GetInstance()->GenerateQuad("PlayGameButton", Color(1, 1, 1), 1.f);
 	MeshBuilder::GetInstance()->GetMesh("PlayGameButton")->textureID = LoadTGA("Image//PlayGameButton.tga");
 
-	/*CLuaInterface::GetInstance()->
-        Create::Sprite2DObject("PlayGameButton",
-		Vector3(halfWindowWidth, halfWindowHeight, 0.f),
-		Vector3(Application::GetInstance().GetWindowWidth(), Application::GetInstance().GetWindowHeight(), 0.f)*/
-	
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "PlayGameButton");
+	Create::Sprite2DObject("PlayGameButton",
+		Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f),
+		Vector3(CLuaInterface::GetInstance()->GetField("scaleX"), CLuaInterface::GetInstance()->GetField("scaleY"), 0.f));
+
+	//Button Border
+	MeshBuilder::GetInstance()->GenerateQuad("ButtonBorder", Color(1, 1, 1), 1.f);
+	MeshBuilder::GetInstance()->GetMesh("ButtonBorder")->textureID = LoadTGA("Image//buttonborder.tga");
+	ButtonBorder = Create::Sprite2DObject("ButtonBorder",
+		Vector3(halfWindowWidth - 10.f, CLuaInterface::GetInstance()->GetField("posY"), 1.f),
+		Vector3(450, 160, 0.f));
+
+	//Options Button
+	MeshBuilder::GetInstance()->GenerateQuad("OptionsButton", Color(1, 1, 1), 1.f);
+	MeshBuilder::GetInstance()->GetMesh("OptionsButton")->textureID = LoadTGA("Image//OptionsButton.tga");
+
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "OptionsButton");
+	Create::Sprite2DObject("OptionsButton",
+		Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f),
+		Vector3(CLuaInterface::GetInstance()->GetField("scaleX"), CLuaInterface::GetInstance()->GetField("scaleY"), 0.f));
+
+	//Highscore Button
+	MeshBuilder::GetInstance()->GenerateQuad("HighscoreButton", Color(1, 1, 1), 1.f);
+	MeshBuilder::GetInstance()->GetMesh("HighscoreButton")->textureID = LoadTGA("Image//HighscoreButton.tga");
+
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "HighscoreButton");
+	Create::Sprite2DObject("HighscoreButton",
+		Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f),
+		Vector3(CLuaInterface::GetInstance()->GetField("scaleX"), CLuaInterface::GetInstance()->GetField("scaleY"), 0.f));
+
+	//Exit Button
+	MeshBuilder::GetInstance()->GenerateQuad("ExitButton", Color(1, 1, 1), 1.f);
+	MeshBuilder::GetInstance()->GetMesh("ExitButton")->textureID = LoadTGA("Image//ExitButton.tga");
+
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "ExitButton");
+	Create::Sprite2DObject("ExitButton",
+		Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f),
+		Vector3(CLuaInterface::GetInstance()->GetField("scaleX"), CLuaInterface::GetInstance()->GetField("scaleY"), 0.f));
 			
-	////Button Border
-	//MeshBuilder::GetInstance()->GenerateQuad("ButtonBorder", Color(1, 1, 1), 1.f);
-	//MeshBuilder::GetInstance()->GetMesh("ButtonBorder")->textureID = LoadTGA("Image//buttonborder.tga");
-	//MenuStateBackground = Create::Sprite2DObject("ButtonBorder",
-	//	Vector3(, , 0.f),
-	//	Vector3(Application::GetInstance().GetWindowWidth(), Application::GetInstance().GetWindowHeight(), 0.f)
 
 	cout << "CMenuState Loaded\n";
 
@@ -76,14 +106,79 @@ void CMenuState::Update(double dt)
 		{
 			buttonState = static_cast<ButtonState>(STATES_TOTAL - 1);
 		}
+
+		//Set button border position
+		switch (buttonState)
+		{
+		case STATE_PLAY_GAME:
+		{
+			lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "PlayGameButton");
+			ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f));
+			break;
+		}
+		case STATE_OPTIONS:
+		{
+			lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "OptionsButton");
+			ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f));
+			break;
+		}
+		case STATE_HIGHSCORES:
+		{
+			lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "HighscoreButton");
+			ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f));
+			break;
+		}
+		case STATE_EXIT:
+		{
+			lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "ExitButton");
+			ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f));
+			break;
+		}
+
+		default:
+			break;
+		}
 	}
-	else if (KeyboardController::GetInstance()->IsKeyReleased('S'))
+
+	if (KeyboardController::GetInstance()->IsKeyReleased('S'))
 	{
 		buttonState = static_cast<ButtonState>(buttonState + 1);
 
 		if (buttonState >= STATES_TOTAL)
 		{
 			buttonState = static_cast<ButtonState>(0);
+		}
+
+		//Set button border position
+		switch (buttonState)
+		{
+		case STATE_PLAY_GAME:
+		{
+			lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "PlayGameButton");
+			ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f));
+			break;
+		}
+		case STATE_OPTIONS:
+		{
+			lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "OptionsButton");
+			ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f));
+			break;
+		}
+		case STATE_HIGHSCORES:
+		{
+			lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "HighscoreButton");
+			ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f));
+			break;
+		}
+		case STATE_EXIT:
+		{
+			lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "ExitButton");
+			ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f));
+			break;
+		}
+
+		default:
+			break;
 		}
 	}
 
@@ -151,4 +246,6 @@ void CMenuState::Exit()
 
 	// Detach camera from other entities
 	GraphicsManager::GetInstance()->DetachCamera();
+	
+	glEnable(GL_DEPTH_TEST);
 }

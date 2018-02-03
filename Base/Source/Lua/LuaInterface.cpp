@@ -96,7 +96,7 @@ void CLuaInterface::Run()
 	cout << "Height of screen" << height << "\n";
 }
 
-void CLuaInterface::Drop(lua_State *luaStateToDrop)
+void CLuaInterface::Drop(lua_State* &luaStateToDrop)
 {
 	if (luaStateToDrop)
 	{
@@ -293,7 +293,7 @@ void CLuaInterface::error(const std::string & errorCode)
 }
 
 #include <assert.h>
-void CLuaInterface::SetLuaFile(const std::string &NewLuaFileName, lua_State *luaState)
+void CLuaInterface::SetLuaFile(const std::string &NewLuaFileName, lua_State* &luaState)
 {
 	//If the the lua state to change is not indicated, default to theLuaState
 	if (!luaState)
@@ -316,5 +316,5 @@ void CLuaInterface::SetLuaFile(const std::string &NewLuaFileName, lua_State *lua
 		luaL_dofile(luaState, NewLuaFileName.c_str());
 	}
 
-	assert(luaState != nullptr && "A lua state interface is null!\n");
+	assert(luaState != nullptr); //A lua interface is null!
 }

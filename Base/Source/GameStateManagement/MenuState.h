@@ -26,6 +26,9 @@ private:
 	SpriteEntity *MenuStateBackground;
 	SpriteEntity *ButtonBorder;
 
+	float halfWindowWidth;
+	float halfWindowHeight;
+
 	enum ButtonState
 	{
 		STATE_PLAY_GAME = 0,
