@@ -293,7 +293,7 @@ void CLuaInterface::error(const std::string & errorCode)
 }
 
 #include <assert.h>
-void CLuaInterface::SetLuaFile(const std::string &NewLuaFileName, lua_State *luaState = nullptr)
+void CLuaInterface::SetLuaFile(const std::string &NewLuaFileName, lua_State *luaState)
 {
 	//If the the lua state to change is not indicated, default to theLuaState
 	if (!luaState)

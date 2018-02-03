@@ -204,7 +204,7 @@ void Application::Exit()
 {
 	SceneManager::GetInstance()->Exit();
 	//Drop the Lua system
-	CLuaInterface::GetInstance()->Drop();
+	CLuaInterface::GetInstance()->DropAll();
 	//Close OpenGL window and terminate GLFW
 	glfwDestroyWindow(m_window);
 	//Finalize and clean up GLFW
