@@ -2,8 +2,6 @@
 #define APPLICATION_H
 
 #include "timer.h"
-#include "GameStateManagement\IntroState.h"
-#include "GameStateManagement\MenuState.h"
 
 class ShaderProgram;
 struct GLFWwindow;
@@ -28,6 +26,10 @@ public:
 
 	int GetWindowHeight();
 	int GetWindowWidth();
+
+	void SetWindowHeight(const int &newWindowHeight);
+	void SetWindowWidth(const int &newWindowWidth);
+	void SetWindowSize(const int &newWindowWidth, const int &newWindowHeight);
 
 private:
 	Application();

@@ -17,6 +17,7 @@
     <ClCompile Include="Source\FPSCamera.cpp" />
     <ClCompile Include="Source\GameStateManagement\IntroState.cpp" />
     <ClCompile Include="Source\GameStateManagement\MenuState.cpp" />
+    <ClCompile Include="Source\GameStateManagement\OptionsState.cpp" />
     <ClCompile Include="Source\GameStateManagement\SceneManager.cpp" />
     <ClCompile Include="Source\GenericEntity.cpp" />
     <ClCompile Include="Source\GroundEntity.cpp" />
@@ -51,6 +52,7 @@
     <ClInclude Include="Source\FPSCamera.h" />
     <ClInclude Include="Source\GameStateManagement\IntroState.h" />
     <ClInclude Include="Source\GameStateManagement\MenuState.h" />
+    <ClInclude Include="Source\GameStateManagement\OptionsState.h" />
     <ClInclude Include="Source\GameStateManagement\SceneManager.h" />
     <ClInclude Include="Source\GenericEntity.h" />
     <ClInclude Include="Source\GroundEntity.h" />

@@ -54,6 +54,8 @@ bool CLuaInterface::Init()
 		//Load lua scripts
 		luaL_dofile(theLuaState, "Image//DM2240.lua");
 
+		CurrentFileName = "Image//DM2240.lua";
+
 		result = true;
 	}
 
@@ -100,6 +102,11 @@ void CLuaInterface::Drop(lua_State* &luaStateToDrop)
 {
 	if (luaStateToDrop)
 	{
+		if (luaStateToDrop == theLuaState)
+		{
+			CurrentFileName.clear();
+		}
+
 		//close Lua State
 		lua_close(luaStateToDrop);
 		luaStateToDrop = nullptr;
@@ -112,6 +119,7 @@ void CLuaInterface::DropAll()
 	{
 		lua_close(theLuaState);
 		theLuaState = nullptr;
+		CurrentFileName.clear();
 	}
 
 	if (theErrorState)
@@ -235,13 +243,13 @@ float CLuaInterface::GetField(const char * key)
 		return 0;
 	}
 	
-	int result = static_cast<int>(lua_tonumber(theLuaState, -1));
+	int result = static_cast<float>(lua_tonumber(theLuaState, -1));
 	lua_pop(theLuaState, 1);
 
 	return result;
 }
 
-void CLuaInterface::saveIntValue(std::string Name, const int &value, const bool &overwrite)
+void CLuaInterface::saveIntValue(std::string Name, const int &value, const std::string &FunctionName, const bool &overwrite)
 {
 	if (!theLuaState)
 	{
@@ -249,7 +257,7 @@ void CLuaInterface::saveIntValue(std::string Name, const int &value, const bool 
 		return;
 	}
 
-	lua_getglobal(theLuaState, "SaveToLuaFile");
+	lua_getglobal(theLuaState, FunctionName.c_str());
 	Name += " = " + std::to_string(value) + '\n';
 	lua_pushstring(theLuaState, Name.c_str());
 	lua_pushinteger(theLuaState, overwrite);
@@ -295,11 +303,7 @@ void CLuaInterface::error(const std::string & errorCode)
 #include <assert.h>
 void CLuaInterface::SetLuaFile(const std::string &NewLuaFileName, lua_State* &luaState)
 {
-	//If the the lua state to change is not indicated, default to theLuaState
-	if (!luaState)
-	{
-		luaState = theLuaState;
-	}
+	assert(luaState != nullptr); //The lua state passed in is a null object
 
 	//Close the lua interface
 	Drop(luaState);
@@ -314,7 +318,15 @@ void CLuaInterface::SetLuaFile(const std::string &NewLuaFileName, lua_State* &lu
 
 		//Load lua scripts
 		luaL_dofile(luaState, NewLuaFileName.c_str());
-	}
 
-	assert(luaState != nullptr); //A lua interface is null!
+		if (luaState == theLuaState)
+		{
+			CurrentFileName = NewLuaFileName;
+		}
+	}
+}
+
+std::string CLuaInterface::GetTheLuaStateCurrentFilename()
+{
+	return CurrentFileName;
 }

@@ -1,4 +1,4 @@
-#include "SceneText.h"
+#include "SceneGame.h"
 #include "GL\glew.h"
 
 #include "shader.hpp"
@@ -26,24 +26,24 @@
 #include <iostream>
 using namespace std;
 
-SceneText* SceneText::sInstance = new SceneText(SceneManager::GetInstance());
+SceneGame* SceneGame::sInstance = new SceneGame(SceneManager::GetInstance());
 
-SceneText::SceneText()
+SceneGame::SceneGame()
 {
 }
 
-SceneText::SceneText(SceneManager* _sceneMgr)
+SceneGame::SceneGame(SceneManager* _sceneMgr)
 {
 	_sceneMgr->AddScene("Start", this);
 }
 
-SceneText::~SceneText()
+SceneGame::~SceneGame()
 {
 	CSpatialPartition::GetInstance()->RemoveCamera();
 	CSceneGraph::GetInstance()->Destroy();
 }
 
-void SceneText::Init()
+void SceneGame::Init()
 {
 	currProg = GraphicsManager::GetInstance()->LoadShader("default", "Shader//Texture.vertexshader", "Shader//Texture.fragmentshader");
 	
@@ -245,7 +245,7 @@ void SceneText::Init()
 		textObj[i] = Create::Text2DObject("text", Vector3(-halfWindowWidth, -halfWindowHeight + fontSize*i + halfFontSize, 0.0f), "", Vector3(fontSize, fontSize, fontSize), Color(0.0f,1.0f,0.0f));
 	}
 }
-void SceneText::AddHelicopters()
+void SceneGame::AddHelicopters()
 {
 	GenericEntity* heli = Create::Entity("cube", Vector3(0.0f, 0.0f, 0.0f), Vector3(10.f, 10.f, 20.f));
 	heli->SetCollider(false);
@@ -320,7 +320,7 @@ void SceneText::AddHelicopters()
 	}
 }
 
-void SceneText::AddBuildings()
+void SceneGame::AddBuildings()
 {
 	GenericEntity* BuildingBaseA = Create::Entity("cube", Vector3(50.0f, 0.0f, 50.0f), Vector3(25.f, 25.f, 25.f));
 	BuildingBaseA->SetCollider(true);
@@ -345,7 +345,7 @@ void SceneText::AddBuildings()
 	BuildingMove->SetSteps(0, 10);
 	BuildingChildNode->SetUpdateTransformation(BuildingMove);
 }
-void SceneText::Update(double dt)
+void SceneGame::Update(double dt)
 {
 	// Update our entities
 	EntityManager::GetInstance()->Update(dt);
@@ -468,7 +468,7 @@ void SceneText::Update(double dt)
 	textObj[2]->SetText(ss.str());
 }
 
-void SceneText::Render()
+void SceneGame::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -487,7 +487,7 @@ void SceneText::Render()
 	EntityManager::GetInstance()->RenderUI();
 }
 
-void SceneText::Exit()
+void SceneGame::Exit()
 {
 	// Detach camera from other entities
 	GraphicsManager::GetInstance()->DetachCamera();

@@ -29,6 +29,8 @@ private:
 	float halfWindowWidth;
 	float halfWindowHeight;
 
+	char MoveUp, MoveDown;
+
 	enum ButtonState
 	{
 		STATE_PLAY_GAME = 0,

@@ -90,6 +90,8 @@ void CMenuState::Init()
 		Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f),
 		Vector3(CLuaInterface::GetInstance()->GetField("scaleX"), CLuaInterface::GetInstance()->GetField("scaleY"), 0.f));
 			
+	MoveUp = CLuaInterface::GetInstance()->getCharValue("MoveUp");
+	MoveDown = CLuaInterface::GetInstance()->getCharValue("MoveDown");
 
 	cout << "CMenuState Loaded\n";
 
@@ -98,7 +100,7 @@ void CMenuState::Init()
 
 void CMenuState::Update(double dt)
 {
-	if (KeyboardController::GetInstance()->IsKeyReleased('W'))
+	if (KeyboardController::GetInstance()->IsKeyReleased(MoveUp))
 	{
 		buttonState = static_cast<ButtonState>(buttonState - 1);
 
@@ -140,7 +142,7 @@ void CMenuState::Update(double dt)
 		}
 	}
 
-	if (KeyboardController::GetInstance()->IsKeyReleased('S'))
+	if (KeyboardController::GetInstance()->IsKeyReleased(MoveDown))
 	{
 		buttonState = static_cast<ButtonState>(buttonState + 1);
 
@@ -195,6 +197,7 @@ void CMenuState::Update(double dt)
 		case STATE_OPTIONS:
 		{
 			cout << "Loading OptionsState\n";
+			SceneManager::GetInstance()->SetActiveScene("OptionsState");
 			break;
 		}
 		case STATE_HIGHSCORES:
@@ -240,9 +243,18 @@ void CMenuState::Exit()
 {
 	//Remove the entity from EntitManager
 	EntityManager::GetInstance()->RemoveEntity(MenuStateBackground);
+	EntityManager::GetInstance()->RemoveEntity(ButtonBorder);
 
 	//Remove the meshes which are specific to CIntroState
 	MeshBuilder::GetInstance()->RemoveMesh("MENUSTATE_BKGROUND");
+
+	//Remove Button Meshes
+	MeshBuilder::GetInstance()->RemoveMesh("PlayGameButton");
+	MeshBuilder::GetInstance()->RemoveMesh("OptionsButton");
+	MeshBuilder::GetInstance()->RemoveMesh("HighscoreButton");
+	MeshBuilder::GetInstance()->RemoveMesh("ExitButton");
+	//Remove Button Border Mesh
+	MeshBuilder::GetInstance()->RemoveMesh("ButtonBorder");
 
 	// Detach camera from other entities
 	GraphicsManager::GetInstance()->DetachCamera();

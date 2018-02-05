@@ -141,6 +141,9 @@
     <ClCompile Include="Source\SceneGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\GameStateManagement\OptionsState.cpp">
+      <Filter>GameStateManagement</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -250,6 +253,9 @@
     </ClInclude>
     <ClInclude Include="Source\SceneGame.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameStateManagement\OptionsState.h">
+      <Filter>GameStateManagement</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

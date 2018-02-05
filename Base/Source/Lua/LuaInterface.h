@@ -35,17 +35,19 @@ public:
 	float getDistanceSquareValue(const std::string &Name, const Vector3 &source, const Vector3 &destination);
 	float GetField(const char *key);
 
-	void saveIntValue(std::string Name, const int &value, const bool &overwrite = false);
+	void saveIntValue(std::string Name, const int &value, const std::string &FunctionName, const bool &overwrite = false);
 	void saveFloatValue(std::string Name, const float &value, const bool &overwrite = false);
 	
 	void error(const std::string &errorCode);
 	void SetLuaFile(const std::string &NewLuaFileName, lua_State* &luaState);
+
+	std::string GetTheLuaStateCurrentFilename();
 
 	//Pointers to the Lua State
 	lua_State *theLuaState;
 	lua_State *theErrorState;
 
 protected:
-
+	std::string CurrentFileName;
 	CLuaInterface();
 };

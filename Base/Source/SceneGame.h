@@ -17,11 +17,11 @@ class ShaderProgram;
 class SceneManager;
 class TextEntity;
 class Light;
-class SceneText : public Scene
+class SceneGame : public Scene
 {	
 public:
-	SceneText();
-	~SceneText();
+	SceneGame();
+	~SceneGame();
 
 	virtual void Init();
 	virtual void Update(double dt);
@@ -32,7 +32,7 @@ public:
 	void AddBuildings();
 
 private:
-	SceneText(SceneManager* _sceneMgr); // This is used to register to SceneManager
+	SceneGame(SceneManager* _sceneMgr); // This is used to register to SceneManager
 
 	ShaderProgram* currProg;
 	CPlayerInfo* playerInfo;
@@ -44,7 +44,7 @@ private:
 	GenericEntity* theCube;
 	CEnemy* theEnemy;
 
-	static SceneText* sInstance; // The pointer to the object that gets registered
+	static SceneGame* sInstance; // The pointer to the object that gets registered
 };
 
 #endif

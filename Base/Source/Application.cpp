@@ -15,8 +15,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "SceneText.h"
+#include "SceneGame.h"
 #include "../Source/Lua/LuaInterface.h"
+
+#include "GameStateManagement\MenuState.h"
+#include "GameStateManagement\IntroState.h"
+#include "GameStateManagement\OptionsState.h"
 
 GLFWwindow* m_window;
 const unsigned char FPS = 60; // FPS of this game
@@ -108,12 +112,14 @@ void Application::Init()
 	CLuaInterface::GetInstance()->Init();
 
 	//Get the OpenGL resolution
+	CLuaInterface::GetInstance()->SetLuaFile("Image//UserConfig.lua", CLuaInterface::GetInstance()->theLuaState);
 	m_window_width = CLuaInterface::GetInstance()->getIntValue("width");
 	m_window_height = CLuaInterface::GetInstance()->getIntValue("height");
+	CLuaInterface::GetInstance()->SetLuaFile("Image//DM2240.lua", CLuaInterface::GetInstance()->theLuaState);
 
 	CLuaInterface::GetInstance()->Run();
-	CLuaInterface::GetInstance()->saveFloatValue("Player1", 200.10f, true);
-	CLuaInterface::GetInstance()->saveIntValue("Player2", 100);
+	/*CLuaInterface::GetInstance()->saveFloatValue("Player1", 200.10f, true);
+	CLuaInterface::GetInstance()->saveIntValue("Player2", 100);*/
 
 	//Set the error callback
 	glfwSetErrorCallback(error_callback);
@@ -133,6 +139,7 @@ void Application::Init()
 
 	//Create a window and create its OpenGL context
 	m_window = glfwCreateWindow(m_window_width, m_window_height, "NYP Framework", nullptr, nullptr);
+	
 
 	//If the window couldn't be created
 	if (!m_window)
@@ -171,7 +178,8 @@ void Application::Init()
 	//Create the Game States
 	SceneManager::GetInstance()->AddScene("IntroState", new CIntroState());
 	SceneManager::GetInstance()->AddScene("MenuState", new CMenuState());
-	SceneManager::GetInstance()->AddScene("GameState", new SceneText());
+	SceneManager::GetInstance()->AddScene("OptionsState", new OptionsState());
+	SceneManager::GetInstance()->AddScene("GameState", new SceneGame());
 
 	//Set the active scene
 	SceneManager::GetInstance()->SetActiveScene("IntroState");
@@ -262,4 +270,23 @@ int Application::GetWindowHeight()
 int Application::GetWindowWidth()
 {
 	return m_window_width;
+}
+
+void Application::SetWindowHeight(const int & newWindowHeight)
+{
+	m_window_height = newWindowHeight;
+	glfwSetWindowSize(m_window, m_window_width, m_window_height);
+}
+
+void Application::SetWindowWidth(const int & newWindowWidth)
+{
+	m_window_width = newWindowWidth;
+	glfwSetWindowSize(m_window, m_window_width, m_window_height);
+}
+
+void Application::SetWindowSize(const int & newWindowWidth, const int & newWindowHeight)
+{
+	m_window_width = newWindowWidth;
+	m_window_height = newWindowHeight;
+	glfwSetWindowSize(m_window, m_window_width, m_window_height);
 }
