@@ -203,6 +203,7 @@ void CMenuState::Update(double dt)
 		case STATE_HIGHSCORES:
 		{
 			cout << "Loading HighscoreState\n";
+			SceneManager::GetInstance()->SetActiveScene("HighscoreState");
 			break;
 		}
 		case STATE_EXIT:

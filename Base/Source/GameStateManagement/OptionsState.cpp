@@ -247,9 +247,14 @@ void OptionsState::Exit()
 {
 	//Remove the entity from EntitManager
 	EntityManager::GetInstance()->RemoveEntity(MenuStateBackground);
+	EntityManager::GetInstance()->RemoveEntity(ButtonBorder);
 
 	//Remove the meshes which are specific to CIntroState
 	MeshBuilder::GetInstance()->RemoveMesh("MENUSTATE_BKGROUND");
+	MeshBuilder::GetInstance()->RemoveMesh("ButtonBorder");
+	MeshBuilder::GetInstance()->RemoveMesh("SaveExitButton");
+	MeshBuilder::GetInstance()->RemoveMesh("CancelExitButton");
+	MeshBuilder::GetInstance()->RemoveMesh("Resolution");
 
 	// Detach camera from other entities
 	GraphicsManager::GetInstance()->DetachCamera();

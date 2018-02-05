@@ -249,6 +249,18 @@ float CLuaInterface::GetField(const char * key)
 	return result;
 }
 
+std::string CLuaInterface::getStringValue(const std::string & Name)
+{
+	lua_getglobal(theLuaState, Name.c_str());
+
+	printf_s("%s\n", CurrentFileName);
+
+	size_t length;
+	const std::string string = lua_tolstring(theLuaState, -1, &length);
+
+	return string;
+}
+
 void CLuaInterface::saveIntValue(std::string Name, const int &value, const std::string &FunctionName, const bool &overwrite)
 {
 	if (!theLuaState)

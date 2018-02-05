@@ -20,7 +20,8 @@
 
 #include "GameStateManagement\MenuState.h"
 #include "GameStateManagement\IntroState.h"
-#include "GameStateManagement\OptionsState.h"
+#include "GameStateManagement\OptionsState.h""
+#include "GameStateManagement\HighscoreState.h"
 
 GLFWwindow* m_window;
 const unsigned char FPS = 60; // FPS of this game
@@ -179,6 +180,7 @@ void Application::Init()
 	SceneManager::GetInstance()->AddScene("IntroState", new CIntroState());
 	SceneManager::GetInstance()->AddScene("MenuState", new CMenuState());
 	SceneManager::GetInstance()->AddScene("OptionsState", new OptionsState());
+	SceneManager::GetInstance()->AddScene("HighscoreState", new HighscoreState());
 	SceneManager::GetInstance()->AddScene("GameState", new SceneGame());
 
 	//Set the active scene

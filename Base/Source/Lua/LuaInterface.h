@@ -34,6 +34,7 @@ public:
 	Vector3 getVector3Values(const std::string &Name);
 	float getDistanceSquareValue(const std::string &Name, const Vector3 &source, const Vector3 &destination);
 	float GetField(const char *key);
+	std::string getStringValue(const std::string &Name);
 
 	void saveIntValue(std::string Name, const int &value, const std::string &FunctionName, const bool &overwrite = false);
 	void saveFloatValue(std::string Name, const float &value, const bool &overwrite = false);
