@@ -10,7 +10,7 @@ Player2N= 6777
 Player3="GreatScott"
 Player3N= 5538
 
-Player4="007"
+Player4="ChingChangChong"
 Player4N= 700
 
 Player5="??????"

@@ -9,6 +9,8 @@
 #include "../Lua/LuaInterface.h"
 #include "ShaderProgram.h"
 
+#include <vector>
+
 class SceneManager;
 class TextEntity;
 
@@ -26,14 +28,32 @@ public:
 	float halfWindowWidth;
 	float halfWindowHeight;
 
+	char ScoreIncrease, ScoreDecrease;
 	char MoveUp, MoveDown;
+
+	std::vector<unsigned int> PlayerScoreVector;
+	std::vector<std::string> PlayerNameVector;
 
 private:
 	FPSCamera camera;
 	SpriteEntity *MenuStateBackground;
+	SpriteEntity *ButtonBorder;
 
 	TextEntity* textObj[11];
 	bool isHighscoreFull;
 
+	
+
 	unsigned int ScoreToInput;
+	void ButtonborderPosSnap();
+
+	enum ButtonState
+	{
+		STATE_SAVESCORE,
+		STATE_RETURNMAIN,
+
+		STATES_TOTAL
+	};
+
+	ButtonState buttonState;
 };

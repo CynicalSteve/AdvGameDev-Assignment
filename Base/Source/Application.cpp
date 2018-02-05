@@ -109,9 +109,10 @@ Application::~Application()
 
 void Application::Init()
 {
+	srand(time(NULL));
+
 	//Init the Lua System
 	CLuaInterface::GetInstance()->Init();
-
 	//Get the OpenGL resolution
 	CLuaInterface::GetInstance()->SetLuaFile("Image//UserConfig.lua", CLuaInterface::GetInstance()->theLuaState);
 	m_window_width = CLuaInterface::GetInstance()->getIntValue("width");

@@ -291,6 +291,26 @@ void CLuaInterface::saveFloatValue(std::string Name, const float &value, const b
 	lua_call(theLuaState, 2, 0);
 }
 
+void CLuaInterface::saveStringValue(std::string Name, const std::string & value, const std::string &FunctionName, const bool & overwrite)
+{
+	if (!theLuaState)
+	{
+		cout << "Lua State does not exist!\n";
+		return;
+	}
+
+	lua_getglobal(theLuaState, FunctionName.c_str());
+	Name += " = ";
+	Name.push_back('"');
+	Name += value;
+	Name.push_back('"');
+	Name.push_back('\n');
+
+	lua_pushstring(theLuaState, Name.c_str());
+	lua_pushinteger(theLuaState, overwrite);
+	lua_call(theLuaState, 2, 0);
+}
+
 void CLuaInterface::error(const std::string & errorCode)
 {
 	if (!theErrorState)

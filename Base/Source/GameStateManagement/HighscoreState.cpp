@@ -30,7 +30,6 @@ void HighscoreState::Init()
 	camera.Init(Vector3(0, 0, 10), Vector3(0, 0, 0), Vector3(0, 1, 0));
 	GraphicsManager::GetInstance()->AttachCamera(&camera);
 
-	srand(0);
 	isHighscoreFull = true;
 	ScoreToInput = 0;
 
@@ -51,8 +50,38 @@ void HighscoreState::Init()
 		Vector3(Application::GetInstance().GetWindowWidth(), Application::GetInstance().GetWindowHeight(), 0.f)
 	);
 
+	//Buttons
+	//SaveScore Button
+	MeshBuilder::GetInstance()->GenerateQuad("SaveScoreButton", Color(1, 1, 1), 1.f);
+	MeshBuilder::GetInstance()->GetMesh("SaveScoreButton")->textureID = LoadTGA("Image//SaveScoreButton.tga");
+
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "SaveScoreButton");
+	Create::Sprite2DObject("SaveScoreButton",
+		Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f),
+		Vector3(CLuaInterface::GetInstance()->GetField("scaleX"), CLuaInterface::GetInstance()->GetField("scaleY"), 0.f));
+
+	//Button Border
+	MeshBuilder::GetInstance()->GenerateQuad("ButtonBorder", Color(1, 1, 1), 1.f);
+	MeshBuilder::GetInstance()->GetMesh("ButtonBorder")->textureID = LoadTGA("Image//buttonborder.tga");
+	ButtonBorder = Create::Sprite2DObject("ButtonBorder",
+		Vector3(halfWindowWidth - 10.f, CLuaInterface::GetInstance()->GetField("posY"), 1.f),
+		Vector3(450, 160, 0.f));
+
+	//ExitButton
+	MeshBuilder::GetInstance()->GenerateQuad("ExitButton", Color(1, 1, 1), 1.f);
+	MeshBuilder::GetInstance()->GetMesh("ExitButton")->textureID = LoadTGA("Image//ExitButton.tga");
+
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "ExitMenuButton");
+	Create::Sprite2DObject("ExitButton",
+		Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f),
+		Vector3(CLuaInterface::GetInstance()->GetField("scaleX"), CLuaInterface::GetInstance()->GetField("scaleY"), 0.f));
+
+	ScoreIncrease = CLuaInterface::GetInstance()->getCharValue("ScoreIncrease");
+	ScoreDecrease = CLuaInterface::GetInstance()->getCharValue("ScoreDecrease");
 	MoveUp = CLuaInterface::GetInstance()->getCharValue("MoveUp");
 	MoveDown = CLuaInterface::GetInstance()->getCharValue("MoveDown");
+
+	buttonState = STATE_SAVESCORE;
 
 	float fontSize = 25.0f;
 	float halfFontSize = fontSize * .5f;
@@ -68,9 +97,6 @@ void HighscoreState::Init()
 	//textObj[0]->SetText("Helo World");
 	CLuaInterface::GetInstance()->SetLuaFile("Image//DM2240_Highscore.lua", CLuaInterface::GetInstance()->theLuaState);
 	std::string PlayerStats;
-
-	std::vector<unsigned int> PlayerScoreVector;
-	std::vector<std::string> PlayerNameVector;
 
 	for (size_t i = 0; i < 10; ++i)
 	{
@@ -98,16 +124,158 @@ void HighscoreState::Init()
 		PlayerStats.clear();
 	}
 
-	textObj[11] = Create::Text2DObject("text", Vector3(halfWindowWidth - (halfWindowWidth * 0.5f), Application::GetInstance().GetWindowHeight() - 100 - fontSize * 16 + halfFontSize, 0.0f), "", Vector3(fontSize, fontSize, fontSize), Color(.0f, 1.0f, .0f));
+	textObj[10] = Create::Text2DObject("text", Vector3(halfWindowWidth - (halfWindowWidth * 0.5f), Application::GetInstance().GetWindowHeight() - 50), "", Vector3(fontSize, fontSize, fontSize), Color(.0f, 1.0f, .0f));
+
+	CLuaInterface::GetInstance()->SetLuaFile("Image//MenuData.lua", CLuaInterface::GetInstance()->theLuaState);
 }
 
 void HighscoreState::Update(double dt)
 {
+	if (KeyboardController::GetInstance()->IsKeyReleased(ScoreIncrease))
+	{
+		ScoreToInput += 1000;
+	}
+
+	if (KeyboardController::GetInstance()->IsKeyReleased(ScoreDecrease))
+	{
+		if (ScoreToInput <= 999)
+		{
+			ScoreToInput = 0;
+		}
+		else
+		{
+			ScoreToInput -= 1000;
+		}
+	}
+
+	if (KeyboardController::GetInstance()->IsKeyReleased(MoveUp))
+	{
+		buttonState = static_cast<ButtonState>(buttonState - 1);
+
+		if (buttonState < 0)
+		{
+			buttonState = static_cast<ButtonState>(STATES_TOTAL - 1);
+		}
+
+		ButtonborderPosSnap();
+	}
+
+	if (KeyboardController::GetInstance()->IsKeyReleased(MoveDown))
+	{
+		buttonState = static_cast<ButtonState>(buttonState + 1);
+
+		if (buttonState >= STATES_TOTAL)
+		{
+			buttonState = static_cast<ButtonState>(0);
+		}
+
+		ButtonborderPosSnap();
+	}
+
+	if (KeyboardController::GetInstance()->IsKeyReleased(VK_RETURN))
+	{
+		switch (buttonState)
+		{
+		case STATE_SAVESCORE:
+		{	
+			bool EligibleForHighscore = false;
+			std::string tempPlayerName = "Player" + std::to_string(rand() % 100 + 1);
+
+			//Check if score should be oart of highscore
+			for (size_t i = 0; i < PlayerNameVector.size(); ++i)
+			{
+				if (tempPlayerName == PlayerNameVector[i])
+				{
+					if (ScoreToInput > PlayerScoreVector[i])
+					{
+						PlayerScoreVector[i] = ScoreToInput;
+						EligibleForHighscore = true;
+					}
+					else
+					{
+						break;
+					}
+
+				}
+				else if (ScoreToInput >= PlayerScoreVector[i])
+				{
+					PlayerScoreVector.insert(PlayerScoreVector.begin() + i, ScoreToInput);
+					PlayerNameVector.insert(PlayerNameVector.begin() + i, tempPlayerName);
+					
+					PlayerNameVector.pop_back();
+					PlayerScoreVector.pop_back();
+
+					EligibleForHighscore = true;
+					break;
+				}
+			}
+
+			if (!EligibleForHighscore)
+			{
+				break;
+			}
+
+			bool overwrite = true;
+			//Save into highscore lua
+			for (size_t i = 0; i < PlayerNameVector.size(); ++i)
+			{
+				std::string PlayerNum = "Player0";
+				PlayerNum[6] = static_cast<char>(i) + 48;
+
+				CLuaInterface::GetInstance()->saveStringValue(PlayerNum, PlayerNameVector[i], "SaveHighscore", overwrite);
+				PlayerNum.push_back('N');
+				overwrite = false;
+				CLuaInterface::GetInstance()->saveIntValue(PlayerNum, PlayerScoreVector[i], "SaveHighscore");
+			}
+
+			std::string PlayerStats;
+			CLuaInterface::GetInstance()->SetLuaFile("Image//DM2240_Highscore.lua", CLuaInterface::GetInstance()->theLuaState);
+
+			//Restart the render text
+			for (size_t i = 0; i < 10; ++i)
+			{
+				std::string PlayerNum = "Player0";
+				PlayerNum[6] = static_cast<char>(i) + 48;
+
+				std::string PlayerName = CLuaInterface::GetInstance()->getStringValue(PlayerNum);
+				PlayerStats = PlayerName;
+
+				PlayerStats.append(" --> ");
+				PlayerNum.push_back('N');
+				unsigned int PlayerScore = CLuaInterface::GetInstance()->getIntValue(PlayerNum);
+				PlayerStats.append(std::to_string(PlayerScore));
+
+				if (PlayerScore <= 0)
+				{
+					isHighscoreFull = false;
+				}
+
+				textObj[i]->SetText(PlayerStats);
+
+				PlayerNameVector.push_back(PlayerName);
+				PlayerScoreVector.push_back(PlayerScore);
+
+				PlayerStats.clear();
+			}
+			ScoreToInput = 0;
+			CLuaInterface::GetInstance()->SetLuaFile("Image//MenuData.lua", CLuaInterface::GetInstance()->theLuaState);
+
+			break;
+		}
+		case STATE_RETURNMAIN:
+		{
+			SceneManager::GetInstance()->SetActiveScene("MenuState");
+			break;
+		}
+		default:
+			break;
+		}
+	}	
 
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "Score To Input: " << ScoreToInput;
-	textObj[11]->SetText(ss.str());
+	textObj[10]->SetText(ss.str());
 }
 
 void HighscoreState::Render()
@@ -143,4 +311,27 @@ void HighscoreState::Exit()
 	GraphicsManager::GetInstance()->DetachCamera();
 
 	glEnable(GL_DEPTH_TEST);
+}
+
+void HighscoreState::ButtonborderPosSnap()
+{
+	//Set button border position
+	switch (buttonState)
+	{
+	case STATE_SAVESCORE:
+	{
+		lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "SaveScoreButton");
+		ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f));
+		break;
+	}
+	case STATE_RETURNMAIN:
+	{
+		lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "ExitMenuButton");
+		ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f));
+		break;
+	}
+
+	default:
+		break;
+	}
 }
