@@ -23,7 +23,7 @@ void SpriteEntity::Update(double _dt)
 
 void SpriteEntity::Render()
 {
-	if (mode == MODE_2D)
+	if (mode == MODE_2D || isDone)
 		return;
 
 	MS& modelStack = GraphicsManager::GetInstance()->GetModelStack();
@@ -36,7 +36,7 @@ void SpriteEntity::Render()
 
 void SpriteEntity::RenderUI()
 {
-	if (mode == MODE_3D)
+	if (mode == MODE_3D || isDone)
 		return;
 
 	MS& modelStack = GraphicsManager::GetInstance()->GetModelStack();

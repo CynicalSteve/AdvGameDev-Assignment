@@ -300,11 +300,31 @@ void CLuaInterface::saveStringValue(std::string Name, const std::string & value,
 	}
 
 	lua_getglobal(theLuaState, FunctionName.c_str());
-	Name += " = ";
+	Name += "=";
 	Name.push_back('"');
 	Name += value;
 	Name.push_back('"');
 	Name.push_back('\n');
+
+	lua_pushstring(theLuaState, Name.c_str());
+	lua_pushinteger(theLuaState, overwrite);
+	lua_call(theLuaState, 2, 0);
+}
+
+void CLuaInterface::saveVector3Value(std::string Name, const Vector3 & positionVector, const std::string & FunctionName, const bool & overwrite)
+{
+	if (!theLuaState)
+	{
+		cout << "Lua State does not exist!\n";
+		return;
+	}
+
+	lua_getglobal(theLuaState, FunctionName.c_str());
+	
+	Name += " = {";
+	Name += std::to_string((int)positionVector.x) + ',';
+	Name += std::to_string((int)positionVector.y) + ',';
+	Name += std::to_string((int)positionVector.z) + "}\n";
 
 	lua_pushstring(theLuaState, Name.c_str());
 	lua_pushinteger(theLuaState, overwrite);

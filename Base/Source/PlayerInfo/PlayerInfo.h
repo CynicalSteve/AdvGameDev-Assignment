@@ -32,6 +32,8 @@ public:
 
 	// Initialise this class instance
 	void Init(void);
+	//Init key inputs
+	void InitKeyInputs(void);
 	// Returns true if the player is on ground
 	bool isOnGround(void);
 	// Returns true if the player is jumping upwards

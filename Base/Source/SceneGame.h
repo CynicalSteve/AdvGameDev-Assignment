@@ -28,8 +28,10 @@ public:
 	virtual void Render();
 	virtual void Exit();
 
-	void AddHelicopters();
-	void AddBuildings();
+	void ShaderInit();
+
+	//Initialise all things that take values from GameSaveData.lua
+	void GameSaveInit();
 
 private:
 	SceneGame(SceneManager* _sceneMgr); // This is used to register to SceneManager
@@ -41,10 +43,13 @@ private:
 	TextEntity* textObj[3];
 	Light* lights[2];
 
-	GenericEntity* theCube;
 	CEnemy* theEnemy;
 
 	static SceneGame* sInstance; // The pointer to the object that gets registered
+
+	char KeySaveGame, KeyPrevWeapon, KeyNextWeapon;
+
+	void SaveGame();
 };
 
 #endif

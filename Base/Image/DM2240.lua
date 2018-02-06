@@ -1,10 +1,10 @@
-function SaveToLuaFile(outputString, overwrite)
+function SaveToGameFile(outputString, overwrite)
    print("SaveToLuaFile...")
    local f;						-- The file
    if overwrite == 1 then		-- Wipe the contents with new data
-      f = assert(io.open("Image/DM2240_HighScore.lua", "w"))
+      f = assert(io.open("Image/GameSaveData.lua", "w"))
    elseif overwrite == 0 then	-- Append with new data
-      f = assert(io.open("Image/DM2240_HighScore.lua", "a"))
+      f = assert(io.open("Image/GameSaveData.lua", "a"))
    end
    -- Write to the file
    f:write(outputString)
@@ -13,7 +13,7 @@ function SaveToLuaFile(outputString, overwrite)
    print("OK")
 end
 
-function CalculateDistanceSquare(x1,y1,z1,x2,y2,z2)
+function CalculateDistanceSquared(x1,y1,z1,x2,y2,z2)
 	local distanceSquare = (x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1) + (z2 - z1)*(z2 - z1)
 	print(distanceSquare)
 	return distanceSquare
@@ -53,8 +53,10 @@ moveBackward = "S"
 moveLeft     = "A"
 moveRight    = "D"
 
--- CPlayerInfo start position
-CPlayerInfoStartPos = {0,0,10}
+SaveGame = "L"
+
+PrevWeapon = "Q"
+NextWeapon= "E"
 
 -- Way points
 Waypoint_A_1 = {x=10.0, y=0.0, z=50.0}

@@ -21,6 +21,7 @@ public:
 	bool MarkForDeletion(EntityBase* _existingEntity);
 
 	void SetSpatialPartition(CSpatialPartition* theSpatialPartition);
+	void ClearEntities();
 
 private:
 	EntityManager();

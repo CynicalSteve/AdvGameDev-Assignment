@@ -39,6 +39,8 @@ public:
 	void saveIntValue(std::string Name, const int &value, const std::string &FunctionName, const bool &overwrite = false);
 	void saveFloatValue(std::string Name, const float &value, const bool &overwrite = false);
 	void saveStringValue(std::string Name, const std::string &value, const std::string &FunctionName, const bool &overwrite = false);
+
+	void saveVector3Value(std::string Name, const Vector3 &positionVector, const std::string &FunctionName, const bool &overwrite = false);
 	
 	void error(const std::string &errorCode);
 	void SetLuaFile(const std::string &NewLuaFileName, lua_State* &luaState);

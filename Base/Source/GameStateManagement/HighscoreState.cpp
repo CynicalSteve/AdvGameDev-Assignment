@@ -94,7 +94,6 @@ void HighscoreState::Init()
 		textObj[i] = Create::Text2DObject("text", Vector3(halfWindowWidth - (halfWindowWidth * 0.5f), Application::GetInstance().GetWindowHeight() - 100 - fontSize * i + halfFontSize, 0.0f), "", Vector3(fontSize, fontSize, fontSize), Color(.0f, 1.0f, .0f));
 	}
 
-	//textObj[0]->SetText("Helo World");
 	CLuaInterface::GetInstance()->SetLuaFile("Image//DM2240_Highscore.lua", CLuaInterface::GetInstance()->theLuaState);
 	std::string PlayerStats;
 
@@ -178,10 +177,15 @@ void HighscoreState::Update(double dt)
 		{
 		case STATE_SAVESCORE:
 		{	
+			if (ScoreToInput == 0)
+			{
+				break;
+			}
+
 			bool EligibleForHighscore = false;
 			std::string tempPlayerName = "Player" + std::to_string(rand() % 100 + 1);
 
-			//Check if score should be oart of highscore
+			//Check if score should be part of highscore
 			for (size_t i = 0; i < PlayerNameVector.size(); ++i)
 			{
 				if (tempPlayerName == PlayerNameVector[i])
@@ -230,8 +234,10 @@ void HighscoreState::Update(double dt)
 
 			std::string PlayerStats;
 			CLuaInterface::GetInstance()->SetLuaFile("Image//DM2240_Highscore.lua", CLuaInterface::GetInstance()->theLuaState);
+			PlayerNameVector.clear();
+			PlayerScoreVector.clear();
 
-			//Restart the render text
+			//Reload the render text
 			for (size_t i = 0; i < 10; ++i)
 			{
 				std::string PlayerNum = "Player0";
@@ -303,9 +309,25 @@ void HighscoreState::Exit()
 {
 	//Remove the entity from EntitManager
 	EntityManager::GetInstance()->RemoveEntity(MenuStateBackground);
+	EntityManager::GetInstance()->RemoveEntity(ButtonBorder);
 
 	//Remove the meshes which are specific to CIntroState
 	MeshBuilder::GetInstance()->RemoveMesh("MENUSTATE_BKGROUND");
+	MeshBuilder::GetInstance()->RemoveMesh("ButtonBorder");
+	MeshBuilder::GetInstance()->RemoveMesh("SaveScoreButton");
+	MeshBuilder::GetInstance()->RemoveMesh("ExitButton");
+	MeshBuilder::GetInstance()->RemoveMesh("text");
+
+	for (size_t i = 0; i < 11; ++i)
+	{
+		delete textObj[i];
+		textObj[i] = nullptr;
+	}
+
+	PlayerNameVector.clear();
+	PlayerScoreVector.clear();
+
+	EntityManager::GetInstance()->ClearEntities();
 
 	// Detach camera from other entities
 	GraphicsManager::GetInstance()->DetachCamera();

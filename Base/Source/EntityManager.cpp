@@ -54,6 +54,11 @@ void EntityManager::Render()
 	end = entityList.end();
 	for (it = entityList.begin(); it != end; ++it)
 	{
+		if ((*it)->IsDone())
+		{
+			continue;
+		}
+
 		if (!(*it)->DoNotRender)
 		{
 			(*it)->Render();
@@ -76,6 +81,11 @@ void EntityManager::RenderUI()
 	end = entityList.end();
 	for (it = entityList.begin(); it != end; ++it)
 	{
+		if ((*it)->IsDone())
+		{
+			continue;
+		}
+
 		(*it)->RenderUI();
 	}
 }
@@ -140,6 +150,11 @@ bool EntityManager::MarkForDeletion(EntityBase* _existingEntity)
 void EntityManager::SetSpatialPartition(CSpatialPartition* theSpatialPartition)
 {
 	this->theSpatialPartition = theSpatialPartition;
+}
+
+void EntityManager::ClearEntities()
+{
+	entityList.clear();
 }
 
 // Constructor

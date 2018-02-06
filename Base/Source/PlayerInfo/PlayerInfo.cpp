@@ -74,7 +74,7 @@ void CPlayerInfo::Init(void)
 	defaultUp.Set(0,1,0);
 
 	// Set the current values
-	position = CLuaInterface::GetInstance()->getVector3Values("PlayerStartingPos");
+	position = CLuaInterface::GetInstance()->getVector3Values("PlayerPos");
 	target.Set(0, 0, 0);
 	up.Set(0, 1, 0);
 
@@ -99,14 +99,15 @@ void CPlayerInfo::Init(void)
 
 	weaponInventory[InventoryWeapons::GRENADE] = new CGrenadeThrow();
 	weaponInventory[InventoryWeapons::GRENADE]->Init();
+}
 
+void CPlayerInfo::InitKeyInputs(void)
+{
 	//init the custom keyboard inputs from lua
 	keyMoveForward = CLuaInterface::GetInstance()->getCharValue("moveForward");
 	keyMoveBackward = CLuaInterface::GetInstance()->getCharValue("moveBackward");
 	keyMoveLeft = CLuaInterface::GetInstance()->getCharValue("moveLeft");
 	keyMoveRight = CLuaInterface::GetInstance()->getCharValue("moveRight");
-
-	CLuaInterface::GetInstance()->getDistanceSquareValue("CalculateDistanceSquared", position, Vector3(10, 10, 10));
 }
 
 // Returns true if the player is on ground
