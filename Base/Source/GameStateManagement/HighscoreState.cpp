@@ -57,14 +57,14 @@ void HighscoreState::Init()
 
 	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "SaveScoreButton");
 	Create::Sprite2DObject("SaveScoreButton",
-		Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f),
-		Vector3(CLuaInterface::GetInstance()->GetField("scaleX"), CLuaInterface::GetInstance()->GetField("scaleY"), 0.f));
+		Vector3(halfWindowWidth, CLuaInterface::GetInstance()->getFieldFloat("posY"), 1.f),
+		Vector3(CLuaInterface::GetInstance()->getFieldFloat("scaleX"), CLuaInterface::GetInstance()->getFieldFloat("scaleY"), 0.f));
 
 	//Button Border
 	MeshBuilder::GetInstance()->GenerateQuad("ButtonBorder", Color(1, 1, 1), 1.f);
 	MeshBuilder::GetInstance()->GetMesh("ButtonBorder")->textureID = LoadTGA("Image//buttonborder.tga");
 	ButtonBorder = Create::Sprite2DObject("ButtonBorder",
-		Vector3(halfWindowWidth - 10.f, CLuaInterface::GetInstance()->GetField("posY"), 1.f),
+		Vector3(halfWindowWidth - 10.f, CLuaInterface::GetInstance()->getFieldFloat("posY"), 1.f),
 		Vector3(450, 160, 0.f));
 
 	//ExitButton
@@ -73,8 +73,8 @@ void HighscoreState::Init()
 
 	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "ExitMenuButton");
 	Create::Sprite2DObject("ExitButton",
-		Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f),
-		Vector3(CLuaInterface::GetInstance()->GetField("scaleX"), CLuaInterface::GetInstance()->GetField("scaleY"), 0.f));
+		Vector3(halfWindowWidth, CLuaInterface::GetInstance()->getFieldFloat("posY"), 1.f),
+		Vector3(CLuaInterface::GetInstance()->getFieldFloat("scaleX"), CLuaInterface::GetInstance()->getFieldFloat("scaleY"), 0.f));
 
 	ScoreIncrease = CLuaInterface::GetInstance()->getCharValue("ScoreIncrease");
 	ScoreDecrease = CLuaInterface::GetInstance()->getCharValue("ScoreDecrease");
@@ -343,13 +343,13 @@ void HighscoreState::ButtonborderPosSnap()
 	case STATE_SAVESCORE:
 	{
 		lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "SaveScoreButton");
-		ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f));
+		ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->getFieldFloat("posY"), 1.f));
 		break;
 	}
 	case STATE_RETURNMAIN:
 	{
 		lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "ExitMenuButton");
-		ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f));
+		ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->getFieldFloat("posY"), 1.f));
 		break;
 	}
 

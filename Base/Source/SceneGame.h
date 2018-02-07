@@ -50,6 +50,7 @@ private:
 	char KeySaveGame, KeyPrevWeapon, KeyNextWeapon;
 
 	void SaveGame();
+	void CreateGameObjects();
 };
 
 #endif

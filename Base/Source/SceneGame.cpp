@@ -79,65 +79,22 @@ void SceneGame::Init()
 	GraphicsManager::GetInstance()->AttachCamera(&camera);
 
 	// Load all the meshes
-	MeshBuilder::GetInstance()->GenerateAxes("reference");
-	MeshBuilder::GetInstance()->GenerateCrossHair("crosshair");
-	MeshBuilder::GetInstance()->GenerateQuad("quad", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("quad")->textureID = LoadTGA("Image//calibri.tga");
-	MeshBuilder::GetInstance()->GenerateText("text", 16, 16);
-	MeshBuilder::GetInstance()->GetMesh("text")->textureID = LoadTGA("Image//calibri.tga");
-	MeshBuilder::GetInstance()->GetMesh("text")->material.kAmbient.Set(1, 0, 0);
-	MeshBuilder::GetInstance()->GenerateOBJ("HQAlien", "OBJ//alien.obj");
-	MeshBuilder::GetInstance()->GetMesh("HQAlien")->textureID = LoadTGA("Image//alien.tga");
-	MeshBuilder::GetInstance()->GenerateQuad("LQAlien", Color(1, 1, 1), 5.f);
-	MeshBuilder::GetInstance()->GetMesh("LQAlien")->textureID = LoadTGA("Image//alienFront.tga");
-	MeshBuilder::GetInstance()->GenerateRing("ring", Color(1, 0, 1), 36, 1, 0.5f);
-	MeshBuilder::GetInstance()->GenerateSphere("lightball", Color(1, 1, 1), 18, 36, 1.f);
-	MeshBuilder::GetInstance()->GenerateSphere("sphere", Color(1, 0, 0), 18, 36, 0.5f);
-	MeshBuilder::GetInstance()->GenerateCone("cone", Color(0.5f, 1, 0.3f), 36, 10.f, 10.f);
-	MeshBuilder::GetInstance()->GenerateCube("cube", Color(1.0f, 1.0f, 0.0f), 1.0f);
-	MeshBuilder::GetInstance()->GetMesh("cone")->material.kDiffuse.Set(0.99f, 0.99f, 0.99f);
-	MeshBuilder::GetInstance()->GetMesh("cone")->material.kSpecular.Set(0.f, 0.f, 0.f);
-	MeshBuilder::GetInstance()->GenerateQuad("GRASS_DARKGREEN", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("GRASS_DARKGREEN")->textureID = LoadTGA("Image//grass_darkgreen.tga");
-	MeshBuilder::GetInstance()->GenerateQuad("GEO_GRASS_LIGHTGREEN", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("GEO_GRASS_LIGHTGREEN")->textureID = LoadTGA("Image//grass_lightgreen.tga");
-	MeshBuilder::GetInstance()->GenerateCube("cubeSG", Color(1.0f, 0.64f, 0.0f), 1.0f);
-
-	MeshBuilder::GetInstance()->GenerateQuad("SKYBOX_FRONT", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GenerateQuad("SKYBOX_BACK", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GenerateQuad("SKYBOX_LEFT", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GenerateQuad("SKYBOX_RIGHT", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GenerateQuad("SKYBOX_TOP", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GenerateQuad("SKYBOX_BOTTOM", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("SKYBOX_FRONT")->textureID = LoadTGA("Image//SkyBox//skybox_front.tga");
-	MeshBuilder::GetInstance()->GetMesh("SKYBOX_BACK")->textureID = LoadTGA("Image//SkyBox//skybox_back.tga");
-	MeshBuilder::GetInstance()->GetMesh("SKYBOX_LEFT")->textureID = LoadTGA("Image//SkyBox//skybox_left.tga");
-	MeshBuilder::GetInstance()->GetMesh("SKYBOX_RIGHT")->textureID = LoadTGA("Image//SkyBox//skybox_right.tga");
-	MeshBuilder::GetInstance()->GetMesh("SKYBOX_TOP")->textureID = LoadTGA("Image//SkyBox//skybox_top.tga");
-	MeshBuilder::GetInstance()->GetMesh("SKYBOX_BOTTOM")->textureID = LoadTGA("Image//SkyBox//skybox_bottom.tga");
-	MeshBuilder::GetInstance()->GenerateRay("laser", 10.0f);
-	MeshBuilder::GetInstance()->GenerateQuad("GRIDMESH", Color(1, 1, 1), 10.f);
-
+	CreateGameObjects();
+	
 	// Set up the Spatial Partition and pass it to the EntityManager to manage
-	CSpatialPartition::GetInstance()->Init(100, 100, 10, 10);
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "GridMeshSize");
+	CSpatialPartition::GetInstance()->Init(CLuaInterface::GetInstance()->getFieldFloat("xGridSize"), CLuaInterface::GetInstance()->getFieldFloat("zGridSize"), 
+		CLuaInterface::GetInstance()->getFieldFloat("xNumofGrid"), CLuaInterface::GetInstance()->getFieldFloat("zNumofGrid"));
 	CSpatialPartition::GetInstance()->SetMesh("GRIDMESH");
 	CSpatialPartition::GetInstance()->SetCamera(&camera);
-	CSpatialPartition::GetInstance()->SetLevelOfDetails(40000.0f, 160000.0f);
-	EntityManager::GetInstance()->SetSpatialPartition(CSpatialPartition::GetInstance());
 
-	//Game objects
-	MeshBuilder::GetInstance()->GenerateOBJ("Safehouse", "OBJ//safehouse.obj");
-	MeshBuilder::GetInstance()->GetMesh("Safehouse")->textureID = LoadTGA("Image//safehouse.tga");
-	MeshBuilder::GetInstance()->GenerateOBJ("CloverBuilding", "OBJ//cloverbuilding.obj");
-	MeshBuilder::GetInstance()->GetMesh("CloverBuilding")->textureID = LoadTGA("Image//cloverbuilding.tga");
-	MeshBuilder::GetInstance()->GenerateOBJ("JigsawTower", "OBJ//JigsawTower.obj");
-	MeshBuilder::GetInstance()->GetMesh("JigsawTower")->textureID = LoadTGA("Image//jigsawbuilding.tga");
-	MeshBuilder::GetInstance()->GenerateQuad("GEO_PAVEMENT", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("GEO_PAVEMENT")->textureID = LoadTGA("Image//pavement.tga");
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "GridLoD");
+	CSpatialPartition::GetInstance()->SetLevelOfDetails(CLuaInterface::GetInstance()->getFieldFloat("distance_High2Mid"), 
+		CLuaInterface::GetInstance()->getFieldFloat("distance_Mid2Low"));
+	EntityManager::GetInstance()->SetSpatialPartition(CSpatialPartition::GetInstance());
 
 	// Create entities into the scene
 	//Create::Entity("reference", Vector3(0.0f, 0.0f, 0.0f)); // Reference
-	Create::Entity("lightball", Vector3(lights[0]->position.x, lights[0]->position.y, lights[0]->position.z)); // Lightball
 
 	//Initialise all things that take values from GameSaveData.lua
 	GameSaveInit();
@@ -149,15 +106,15 @@ void SceneGame::Init()
 											 "SKYBOX_TOP", "SKYBOX_BOTTOM");
 
 	// Customise the ground entity
-	groundEntity->SetPosition(Vector3(0, -10, 0));
-	groundEntity->SetScale(Vector3(100.0f, 100.0f, 100.0f));
-	groundEntity->SetGrids(Vector3(10.0f, 1.0f, 10.0f));
+	groundEntity->SetPosition(CLuaInterface::GetInstance()->getVector3Values("GroundPos"));
+	groundEntity->SetScale(CLuaInterface::GetInstance()->getVector3Values("GroundScale"));
+	groundEntity->SetGrids(CLuaInterface::GetInstance()->getVector3Values("GroundGrids"));
 	playerInfo->SetTerrain(groundEntity);
 	theEnemy->SetTerrain(groundEntity);
 
 	// Setup the 2D entities
-	float halfWindowWidth = Application::GetInstance().GetWindowWidth() / 2.0f;
-	float halfWindowHeight = Application::GetInstance().GetWindowHeight() / 2.0f;
+	float halfWindowWidth = Application::GetInstance().GetWindowWidth() * .5f;
+	float halfWindowHeight = Application::GetInstance().GetWindowHeight() * .5f;
 	float fontSize = 25.0f;
 	float halfFontSize = fontSize / 2.0f;
 	for (int i = 0; i < 3; ++i)
@@ -376,4 +333,204 @@ void SceneGame::GameSaveInit()
 void SceneGame::SaveGame()
 {
    CLuaInterface::GetInstance()->saveVector3Value("PlayerPos", playerInfo->GetPos(), "SaveToGameFile", true);
+}
+
+void SceneGame::CreateGameObjects()
+{
+	//Axes
+	MeshBuilder::GetInstance()->GenerateAxes(CLuaInterface::GetInstance()->getStringValue("AxesName"));
+	//Crosshair
+	MeshBuilder::GetInstance()->GenerateCrossHair(CLuaInterface::GetInstance()->getStringValue("CrossHairName"));
+
+	//Calibri Quad
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "quad");
+	std::string Name = CLuaInterface::GetInstance()->getFieldString("Name");
+	float Length = CLuaInterface::GetInstance()->getFieldFloat("length");
+	std::string TextureName = CLuaInterface::GetInstance()->getFieldString("Texture");
+	std::string ColorName = CLuaInterface::GetInstance()->getStringValue("quadColor");
+
+	MeshBuilder::GetInstance()->GenerateQuad(Name, Color(ColorName), Length);
+	MeshBuilder::GetInstance()->GetMesh(Name)->textureID = LoadTGA(TextureName.c_str());
+
+	//Text Quad
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "text");
+	Name = CLuaInterface::GetInstance()->getFieldString("Name");
+	unsigned int row = CLuaInterface::GetInstance()->getFieldFloat("row");
+	unsigned int col = CLuaInterface::GetInstance()->getFieldFloat("column");
+	TextureName = CLuaInterface::GetInstance()->getFieldString("Texture");
+
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "textMaterialRGB");
+
+	MeshBuilder::GetInstance()->GenerateText(Name, row, col);
+	MeshBuilder::GetInstance()->GetMesh(Name)->textureID = LoadTGA(TextureName.c_str());
+	MeshBuilder::GetInstance()->GetMesh(Name)->material.kAmbient.Set
+	(CLuaInterface::GetInstance()->getFieldFloat("r"), CLuaInterface::GetInstance()->getFieldFloat("g"),
+		CLuaInterface::GetInstance()->getFieldFloat("b"));
+
+	//HQ Alien
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "HQAlien");
+	Name = CLuaInterface::GetInstance()->getFieldString("Name");
+	std::string OBJdir = CLuaInterface::GetInstance()->getFieldString("ObjDir");
+	TextureName = CLuaInterface::GetInstance()->getFieldString("Texture");
+
+	MeshBuilder::GetInstance()->GenerateOBJ(Name, OBJdir);
+	MeshBuilder::GetInstance()->GetMesh(Name)->textureID = LoadTGA(TextureName.c_str());
+
+	//LQ Alien
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "LQAlien");
+	Name = CLuaInterface::GetInstance()->getFieldString("Name");
+	ColorName = CLuaInterface::GetInstance()->getFieldString("ColorName");
+	Length = CLuaInterface::GetInstance()->getFieldFloat("length");
+	TextureName = CLuaInterface::GetInstance()->getFieldString("Texture");
+
+	MeshBuilder::GetInstance()->GenerateQuad(Name, Color(ColorName), Length);
+	MeshBuilder::GetInstance()->GetMesh(Name)->textureID = LoadTGA(TextureName.c_str());
+
+	//Ring
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "ring");
+	Name = CLuaInterface::GetInstance()->getFieldString("Name");
+	ColorName = CLuaInterface::GetInstance()->getFieldString("ColorName");
+	unsigned int slices = CLuaInterface::GetInstance()->getFieldFloat("slices");
+	float innerR = CLuaInterface::GetInstance()->getFieldFloat("innerRadius");
+	float outerR = CLuaInterface::GetInstance()->getFieldFloat("outerRadius");
+
+	MeshBuilder::GetInstance()->GenerateRing(Name, Color(ColorName), slices, innerR, outerR);
+
+	//Lightball
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "lightball");
+	Name = CLuaInterface::GetInstance()->getFieldString("Name");
+	ColorName = CLuaInterface::GetInstance()->getFieldString("ColorName");
+	unsigned int stacks = CLuaInterface::GetInstance()->getFieldFloat("stacks");
+	slices = CLuaInterface::GetInstance()->getFieldFloat("slices");
+
+	MeshBuilder::GetInstance()->GenerateSphere(Name, Color(ColorName), slices, stacks);
+	Create::Entity(Name, Vector3(lights[0]->position.x, lights[0]->position.y, lights[0]->position.z)); // Lightball
+
+	//Sphere
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "sphere");
+	Name = CLuaInterface::GetInstance()->getFieldString("Name");
+	ColorName = CLuaInterface::GetInstance()->getFieldString("ColorName");
+	stacks = CLuaInterface::GetInstance()->getFieldFloat("stacks");
+	slices = CLuaInterface::GetInstance()->getFieldFloat("slices");
+	float radius = CLuaInterface::GetInstance()->getFieldFloat("radius");
+
+	MeshBuilder::GetInstance()->GenerateSphere(Name, Color(ColorName), stacks, slices, radius);
+
+	//Cube
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "cube");
+	Name = CLuaInterface::GetInstance()->getFieldString("Name");
+	ColorName = CLuaInterface::GetInstance()->getFieldString("ColorName");
+
+	MeshBuilder::GetInstance()->GenerateCube(Name, Color(ColorName));
+
+	//Cone
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "cone");
+	Name = CLuaInterface::GetInstance()->getFieldString("Name");
+	slices = CLuaInterface::GetInstance()->getFieldFloat("slices");
+	radius = CLuaInterface::GetInstance()->getFieldFloat("radius");
+	float height = CLuaInterface::GetInstance()->getFieldFloat("height");
+
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "coneColor");
+	MeshBuilder::GetInstance()->GenerateCone(Name, Color(CLuaInterface::GetInstance()->getFieldFloat("r"),
+		CLuaInterface::GetInstance()->getFieldFloat("g"), CLuaInterface::GetInstance()->getFieldFloat("b")),
+		slices, radius, height);
+
+	//Grass Dark Green
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "DarkGrass");
+	Name = CLuaInterface::GetInstance()->getFieldString("Name");
+	ColorName = CLuaInterface::GetInstance()->getFieldString("ColorName");
+	TextureName = CLuaInterface::GetInstance()->getFieldString("Texture");
+
+	MeshBuilder::GetInstance()->GenerateQuad(Name, Color(ColorName));
+	MeshBuilder::GetInstance()->GetMesh(Name)->textureID = LoadTGA(TextureName.c_str());
+
+	//Grass Light Green
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "LightGrass");
+	Name = CLuaInterface::GetInstance()->getFieldString("Name");
+	ColorName = CLuaInterface::GetInstance()->getFieldString("ColorName");
+	TextureName = CLuaInterface::GetInstance()->getFieldString("Texture");
+
+	MeshBuilder::GetInstance()->GenerateQuad(Name, Color(ColorName));
+	MeshBuilder::GetInstance()->GetMesh(Name)->textureID = LoadTGA(TextureName.c_str());
+
+	//CubeSG
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "CubeSG");
+	Name = CLuaInterface::GetInstance()->getFieldString("Name");
+
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "CubeSGColor");
+	MeshBuilder::GetInstance()->GenerateCube(Name, Color(CLuaInterface::GetInstance()->getFieldFloat("r"),
+		CLuaInterface::GetInstance()->getFieldFloat("g"), CLuaInterface::GetInstance()->getFieldFloat("b")));
+
+	//Skybox
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "SkyboxFront");
+	Name = CLuaInterface::GetInstance()->getFieldString("Name");
+	ColorName = CLuaInterface::GetInstance()->getFieldString("ColorName");
+	TextureName = CLuaInterface::GetInstance()->getFieldString("Texture");
+	MeshBuilder::GetInstance()->GenerateQuad(Name, Color(ColorName));
+	MeshBuilder::GetInstance()->GetMesh(Name)->textureID = LoadTGA(TextureName.c_str());
+
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "SkyboxBack");
+	Name = CLuaInterface::GetInstance()->getFieldString("Name");
+	ColorName = CLuaInterface::GetInstance()->getFieldString("ColorName");
+	TextureName = CLuaInterface::GetInstance()->getFieldString("Texture");
+	MeshBuilder::GetInstance()->GenerateQuad(Name, Color(ColorName));
+	MeshBuilder::GetInstance()->GetMesh(Name)->textureID = LoadTGA(TextureName.c_str());
+
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "SkyboxLeft");
+	Name = CLuaInterface::GetInstance()->getFieldString("Name");
+	ColorName = CLuaInterface::GetInstance()->getFieldString("ColorName");
+	TextureName = CLuaInterface::GetInstance()->getFieldString("Texture");
+	MeshBuilder::GetInstance()->GenerateQuad(Name, Color(ColorName));
+	MeshBuilder::GetInstance()->GetMesh(Name)->textureID = LoadTGA(TextureName.c_str());
+
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "SkyboxRight");
+	Name = CLuaInterface::GetInstance()->getFieldString("Name");
+	ColorName = CLuaInterface::GetInstance()->getFieldString("ColorName");
+	TextureName = CLuaInterface::GetInstance()->getFieldString("Texture");
+	MeshBuilder::GetInstance()->GenerateQuad(Name, Color(ColorName));
+	MeshBuilder::GetInstance()->GetMesh(Name)->textureID = LoadTGA(TextureName.c_str());
+
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "SkyboxTop");
+	Name = CLuaInterface::GetInstance()->getFieldString("Name");
+	ColorName = CLuaInterface::GetInstance()->getFieldString("ColorName");
+	TextureName = CLuaInterface::GetInstance()->getFieldString("Texture");
+	MeshBuilder::GetInstance()->GenerateQuad(Name, Color(ColorName));
+	MeshBuilder::GetInstance()->GetMesh(Name)->textureID = LoadTGA(TextureName.c_str());
+
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "SkyboxBottom");
+	Name = CLuaInterface::GetInstance()->getFieldString("Name");
+	ColorName = CLuaInterface::GetInstance()->getFieldString("ColorName");
+	TextureName = CLuaInterface::GetInstance()->getFieldString("Texture");
+	MeshBuilder::GetInstance()->GenerateQuad(Name, Color(ColorName));
+	MeshBuilder::GetInstance()->GetMesh(Name)->textureID = LoadTGA(TextureName.c_str());
+
+	//Laser
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "Laser");
+	MeshBuilder::GetInstance()->GenerateRay(CLuaInterface::GetInstance()->getFieldString("Name"), CLuaInterface::GetInstance()->getFieldFloat("length"));
+
+	//Grid Mesh
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "GridMesh");
+	MeshBuilder::GetInstance()->GenerateQuad(CLuaInterface::GetInstance()->getFieldString("Name"),
+		Color(CLuaInterface::GetInstance()->getFieldString("ColorName")), CLuaInterface::GetInstance()->getFieldFloat("length"));
+
+	//Game objects
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "Safehouse");
+	Name = CLuaInterface::GetInstance()->getFieldString("Name");
+	MeshBuilder::GetInstance()->GenerateOBJ(Name, CLuaInterface::GetInstance()->getFieldString("ObjDir"));
+	MeshBuilder::GetInstance()->GetMesh(Name)->textureID = LoadTGA(CLuaInterface::GetInstance()->getFieldString("Texture").c_str());
+
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "CloverBuilding");
+	Name = CLuaInterface::GetInstance()->getFieldString("Name");
+	MeshBuilder::GetInstance()->GenerateOBJ(Name, CLuaInterface::GetInstance()->getFieldString("ObjDir"));
+	MeshBuilder::GetInstance()->GetMesh(Name)->textureID = LoadTGA(CLuaInterface::GetInstance()->getFieldString("Texture").c_str());
+
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "JigsawTower");
+	Name = CLuaInterface::GetInstance()->getFieldString("Name");
+	MeshBuilder::GetInstance()->GenerateOBJ(Name, CLuaInterface::GetInstance()->getFieldString("ObjDir"));
+	MeshBuilder::GetInstance()->GetMesh(Name)->textureID = LoadTGA(CLuaInterface::GetInstance()->getFieldString("Texture").c_str());
+
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "Pavement");
+	Name = CLuaInterface::GetInstance()->getFieldString("Name");
+	MeshBuilder::GetInstance()->GenerateQuad(Name, Color(CLuaInterface::GetInstance()->getFieldString("ColorName")));
+	MeshBuilder::GetInstance()->GetMesh(Name)->textureID = LoadTGA(CLuaInterface::GetInstance()->getFieldString("Texture").c_str());
 }

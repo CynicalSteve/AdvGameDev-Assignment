@@ -53,14 +53,14 @@ void CMenuState::Init()
 
 	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "PlayGameButton");
 	Create::Sprite2DObject("PlayGameButton",
-		Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f),
-		Vector3(CLuaInterface::GetInstance()->GetField("scaleX"), CLuaInterface::GetInstance()->GetField("scaleY"), 0.f));
+		Vector3(halfWindowWidth, CLuaInterface::GetInstance()->getFieldFloat("posY"), 1.f),
+		Vector3(CLuaInterface::GetInstance()->getFieldFloat("scaleX"), CLuaInterface::GetInstance()->getFieldFloat("scaleY"), 0.f));
 
 	//Button Border
 	MeshBuilder::GetInstance()->GenerateQuad("ButtonBorder", Color(1, 1, 1), 1.f);
 	MeshBuilder::GetInstance()->GetMesh("ButtonBorder")->textureID = LoadTGA("Image//buttonborder.tga");
 	ButtonBorder = Create::Sprite2DObject("ButtonBorder",
-		Vector3(halfWindowWidth - 10.f, CLuaInterface::GetInstance()->GetField("posY"), 1.f),
+		Vector3(halfWindowWidth - 10.f, CLuaInterface::GetInstance()->getFieldFloat("posY"), 1.f),
 		Vector3(450, 160, 0.f));
 
 	//Options Button
@@ -69,8 +69,8 @@ void CMenuState::Init()
 
 	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "OptionsButton");
 	Create::Sprite2DObject("OptionsButton",
-		Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f),
-		Vector3(CLuaInterface::GetInstance()->GetField("scaleX"), CLuaInterface::GetInstance()->GetField("scaleY"), 0.f));
+		Vector3(halfWindowWidth, CLuaInterface::GetInstance()->getFieldFloat("posY"), 1.f),
+		Vector3(CLuaInterface::GetInstance()->getFieldFloat("scaleX"), CLuaInterface::GetInstance()->getFieldFloat("scaleY"), 0.f));
 
 	//Highscore Button
 	MeshBuilder::GetInstance()->GenerateQuad("HighscoreButton", Color(1, 1, 1), 1.f);
@@ -78,8 +78,8 @@ void CMenuState::Init()
 
 	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "HighscoreButton");
 	Create::Sprite2DObject("HighscoreButton",
-		Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f),
-		Vector3(CLuaInterface::GetInstance()->GetField("scaleX"), CLuaInterface::GetInstance()->GetField("scaleY"), 0.f));
+		Vector3(halfWindowWidth, CLuaInterface::GetInstance()->getFieldFloat("posY"), 1.f),
+		Vector3(CLuaInterface::GetInstance()->getFieldFloat("scaleX"), CLuaInterface::GetInstance()->getFieldFloat("scaleY"), 0.f));
 
 	//Exit Button
 	MeshBuilder::GetInstance()->GenerateQuad("ExitButton", Color(1, 1, 1), 1.f);
@@ -87,8 +87,8 @@ void CMenuState::Init()
 
 	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "ExitButton");
 	Create::Sprite2DObject("ExitButton",
-		Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f),
-		Vector3(CLuaInterface::GetInstance()->GetField("scaleX"), CLuaInterface::GetInstance()->GetField("scaleY"), 0.f));
+		Vector3(halfWindowWidth, CLuaInterface::GetInstance()->getFieldFloat("posY"), 1.f),
+		Vector3(CLuaInterface::GetInstance()->getFieldFloat("scaleX"), CLuaInterface::GetInstance()->getFieldFloat("scaleY"), 0.f));
 			
 	MoveUp = CLuaInterface::GetInstance()->getCharValue("MoveUp");
 	MoveDown = CLuaInterface::GetInstance()->getCharValue("MoveDown");
@@ -115,25 +115,25 @@ void CMenuState::Update(double dt)
 		case STATE_PLAY_GAME:
 		{
 			lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "PlayGameButton");
-			ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f));
+			ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->getFieldFloat("posY"), 1.f));
 			break;
 		}
 		case STATE_OPTIONS:
 		{
 			lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "OptionsButton");
-			ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f));
+			ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->getFieldFloat("posY"), 1.f));
 			break;
 		}
 		case STATE_HIGHSCORES:
 		{
 			lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "HighscoreButton");
-			ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f));
+			ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->getFieldFloat("posY"), 1.f));
 			break;
 		}
 		case STATE_EXIT:
 		{
 			lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "ExitButton");
-			ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f));
+			ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->getFieldFloat("posY"), 1.f));
 			break;
 		}
 
@@ -157,25 +157,25 @@ void CMenuState::Update(double dt)
 		case STATE_PLAY_GAME:
 		{
 			lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "PlayGameButton");
-			ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f));
+			ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->getFieldFloat("posY"), 1.f));
 			break;
 		}
 		case STATE_OPTIONS:
 		{
 			lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "OptionsButton");
-			ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f));
+			ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->getFieldFloat("posY"), 1.f));
 			break;
 		}
 		case STATE_HIGHSCORES:
 		{
 			lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "HighscoreButton");
-			ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f));
+			ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->getFieldFloat("posY"), 1.f));
 			break;
 		}
 		case STATE_EXIT:
 		{
 			lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "ExitButton");
-			ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f));
+			ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->getFieldFloat("posY"), 1.f));
 			break;
 		}
 

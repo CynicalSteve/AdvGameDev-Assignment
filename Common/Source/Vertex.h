@@ -38,6 +38,18 @@ struct Color
 		{
 			Set(0, 0, 1);
 		}
+		else if (ColorName == "yellow")
+		{
+			Set(1, 1, 0);
+		}
+		else if (ColorName == "violet")
+		{
+			Set(1, 0, 1);
+		}
+		else if (ColorName == "cyan")
+		{
+			Set(0, 1, 1);
+		}
 		else if (ColorName == "orange")
 		{
 			Set(1, .647f, 0);
@@ -46,10 +58,7 @@ struct Color
 		{
 			Set(.663f, .663f, .663f);
 		}
-		else if (ColorName == "yellow")
-		{
-			Set(1, 1, 0);
-		}
+		
 		else if (ColorName == "purple")
 		{
 			Set(.502f, 0, .502f);
@@ -62,6 +71,7 @@ struct Color
 		{
 			Set(1, .753f, .796f);
 		}
+		
 		else
 		{
 			//If no color is found, default to white

@@ -51,7 +51,7 @@ void OptionsState::Init()
 	MeshBuilder::GetInstance()->GenerateQuad("ButtonBorder", Color(1, 1, 1), 1.f);
 	MeshBuilder::GetInstance()->GetMesh("ButtonBorder")->textureID = LoadTGA("Image//buttonborder.tga");
 	ButtonBorder = Create::Sprite2DObject("ButtonBorder",
-		Vector3(halfWindowWidth - 10.f, CLuaInterface::GetInstance()->GetField("posY"), 1.f),
+		Vector3(halfWindowWidth - 10.f, CLuaInterface::GetInstance()->getFieldFloat("posY"), 1.f),
 		Vector3(450, 160, 0.f));
 	
 	//Buttons
@@ -59,8 +59,8 @@ void OptionsState::Init()
 	MeshBuilder::GetInstance()->GenerateQuad("Resolution", Color(1, 1, 1), 1.f);
 	MeshBuilder::GetInstance()->GetMesh("Resolution")->textureID = LoadTGA("Image//ChangeResButton.tga");
 	Create::Sprite2DObject("Resolution",
-		Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f),
-		Vector3(CLuaInterface::GetInstance()->GetField("scaleX"), CLuaInterface::GetInstance()->GetField("scaleY"), 0.f));
+		Vector3(halfWindowWidth, CLuaInterface::GetInstance()->getFieldFloat("posY"), 1.f),
+		Vector3(CLuaInterface::GetInstance()->getFieldFloat("scaleX"), CLuaInterface::GetInstance()->getFieldFloat("scaleY"), 0.f));
 
 	//Save & Exit
 	MeshBuilder::GetInstance()->GenerateQuad("SaveExitButton", Color(1, 1, 1), 1.f);
@@ -68,8 +68,8 @@ void OptionsState::Init()
 
 	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "SaveExitButton");
 	Create::Sprite2DObject("SaveExitButton",
-		Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f),
-		Vector3(CLuaInterface::GetInstance()->GetField("scaleX"), CLuaInterface::GetInstance()->GetField("scaleY"), 0.f));
+		Vector3(halfWindowWidth, CLuaInterface::GetInstance()->getFieldFloat("posY"), 1.f),
+		Vector3(CLuaInterface::GetInstance()->getFieldFloat("scaleX"), CLuaInterface::GetInstance()->getFieldFloat("scaleY"), 0.f));
 
 	//Cancel & Exit
 	MeshBuilder::GetInstance()->GenerateQuad("CancelExitButton", Color(1, 1, 1), 1.f);
@@ -77,8 +77,8 @@ void OptionsState::Init()
 
 	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "CancelExitButton");
 	Create::Sprite2DObject("CancelExitButton",
-		Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f),
-		Vector3(CLuaInterface::GetInstance()->GetField("scaleX"), CLuaInterface::GetInstance()->GetField("scaleY"), 0.f));
+		Vector3(halfWindowWidth, CLuaInterface::GetInstance()->getFieldFloat("posY"), 1.f),
+		Vector3(CLuaInterface::GetInstance()->getFieldFloat("scaleX"), CLuaInterface::GetInstance()->getFieldFloat("scaleY"), 0.f));
 
 	std::string resolutionString = std::to_string(Application::GetInstance().GetWindowWidth()) + 'x' + std::to_string(Application::GetInstance().GetWindowHeight());
 
@@ -270,19 +270,19 @@ void OptionsState::ButtonborderPosSnap()
 	case STATE_RESOLUTION:
 	{
 		lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "Resolution");
-		ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f));
+		ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->getFieldFloat("posY"), 1.f));
 		break;
 	}
 	case STATE_SAVEEXIT:
 	{
 		lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "SaveExitButton");
-		ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f));
+		ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->getFieldFloat("posY"), 1.f));
 		break;
 	}
 	case STATE_CANCELEXIT:
 	{
 		lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "CancelExitButton");
-		ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->GetField("posY"), 1.f));
+		ButtonBorder->SetPosition(Vector3(halfWindowWidth, CLuaInterface::GetInstance()->getFieldFloat("posY"), 1.f));
 		break;
 	}
 

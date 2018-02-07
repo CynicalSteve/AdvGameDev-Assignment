@@ -92,7 +92,7 @@ void CLuaInterface::Run()
 	int height = lua_tointeger(theLuaState, -1);
 
 	//Display on screen
-	cout << title << "\n";
+	std::cout << title << "\n";
 	cout << "-------------------------------------------------\n";
 	cout << "Width of screen: " << width << "\n";
 	cout << "Height of screen" << height << "\n";
@@ -224,7 +224,7 @@ float CLuaInterface::getDistanceSquareValue(const std::string & Name, const Vect
 
 }
 
-float CLuaInterface::GetField(const char * key)
+float CLuaInterface::getFieldFloat(const char * key)
 {
 	//Error Check - whether the variables in the stack belong to a table
 	if (!lua_istable(theLuaState, -1))
@@ -243,7 +243,25 @@ float CLuaInterface::GetField(const char * key)
 		return 0;
 	}
 	
-	int result = static_cast<float>(lua_tonumber(theLuaState, -1));
+	const float result = static_cast<float>(lua_tonumber(theLuaState, -1));
+	lua_pop(theLuaState, 1);
+
+	return result;
+}
+
+std::string CLuaInterface::getFieldString(const char * key)
+{
+	//Error Check - whether the variables in the stack belong to a table
+	if (!lua_istable(theLuaState, -1))
+	{
+		error("error100");
+		return "";
+	}
+
+	lua_pushstring(theLuaState, key);
+	lua_gettable(theLuaState, -2);
+
+	std::string result = lua_tostring(theLuaState, -1);
 	lua_pop(theLuaState, 1);
 
 	return result;
@@ -253,10 +271,9 @@ std::string CLuaInterface::getStringValue(const std::string & Name)
 {
 	lua_getglobal(theLuaState, Name.c_str());
 
-	printf_s("%s\n", CurrentFileName);
+	printf("%s\n", CurrentFileName);
 
-	size_t length;
-	const std::string string = lua_tolstring(theLuaState, -1, &length);
+	const std::string string = lua_tostring(theLuaState, -1);
 
 	return string;
 }
