@@ -4,3 +4,6 @@ IJKLOP - light movement
 1,2 - toggle front face culling
 3,4 - toggle wireframe mode
 5,6,7 - toggle point, directional, spotlight
+
+'L' - While in Main Game State, this saves the game data (player pos, etc)
+ENTER - Trigger an event
