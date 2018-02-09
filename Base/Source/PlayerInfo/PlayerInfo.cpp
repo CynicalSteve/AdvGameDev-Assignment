@@ -76,6 +76,7 @@ void CPlayerInfo::Init(void)
 	// Set the current values
 	position = CLuaInterface::GetInstance()->getVector3Values("PlayerPos");
 	target.Set(0, 0, 0);
+	pitch = yaw = 0;
 	up.Set(0, 1, 0);
 
 	// Set Boundary
@@ -311,133 +312,50 @@ void CPlayerInfo::UpdateFreeFall(double dt)
  ********************************************************************************/
 void CPlayerInfo::Update(double dt)
 {
+	Vector3 viewUV = target - position;
 	double mouse_diff_x, mouse_diff_y;
+
+	if (KeyboardController::GetInstance()->IsKeyDown(VK_LEFT))
+		yaw += 0.001;
+	if (KeyboardController::GetInstance()->IsKeyDown(VK_RIGHT))
+		yaw -= 0.001;
+	if (KeyboardController::GetInstance()->IsKeyDown(VK_UP))
+		pitch += 0.001;
+	if (KeyboardController::GetInstance()->IsKeyDown(VK_DOWN))
+		pitch -= 0.001;
+
 	MouseController::GetInstance()->GetMouseDelta(mouse_diff_x, mouse_diff_y);
 
-	double camera_yaw = mouse_diff_x * 0.0174555555555556;		// 3.142 / 180.0
-	double camera_pitch = mouse_diff_y * 0.0174555555555556;	// 3.142 / 180.0
+	yaw += mouse_diff_x * 0.001;		// 3.142 / 180.0
+	pitch -= mouse_diff_y * 0.001;	// 3.142 / 180.0
+
+	if (pitch > Math::HALF_PI)
+		pitch = Math::HALF_PI;
+	else if (pitch < -Math::HALF_PI)
+		pitch = -Math::HALF_PI;
 
 	// Update the position if the WASD buttons were activated
-	if (KeyboardController::GetInstance()->IsKeyDown(keyMoveForward) ||
-		KeyboardController::GetInstance()->IsKeyDown(keyMoveLeft) ||
-		KeyboardController::GetInstance()->IsKeyDown(keyMoveBackward) ||
-		KeyboardController::GetInstance()->IsKeyDown(keyMoveRight))
-	{
-		Vector3 viewVector = target - position;
-		Vector3 rightUV;
-		if (KeyboardController::GetInstance()->IsKeyDown(keyMoveForward))
-		{
-			position += viewVector.Normalized() * (float)m_dSpeed * (float)dt;
-		}
-		else if (KeyboardController::GetInstance()->IsKeyDown(keyMoveBackward))
-		{
-			position -= viewVector.Normalized() * (float)m_dSpeed * (float)dt;
-		}
-		if (KeyboardController::GetInstance()->IsKeyDown(keyMoveLeft))
-		{
-			rightUV = (viewVector.Normalized()).Cross(up);
-			rightUV.y = 0;
-			rightUV.Normalize();
-			position -= rightUV * (float)m_dSpeed * (float)dt;
-		}
-		else if (KeyboardController::GetInstance()->IsKeyDown(keyMoveRight))
-		{
-			rightUV = (viewVector.Normalized()).Cross(up);
-			rightUV.y = 0;
-			rightUV.Normalize();
-			position += rightUV * (float)m_dSpeed * (float)dt;
-		}
-		// Constrain the position
-		Constrain();
-		// Update the target
-		target = position + viewVector;
-	}
+	if (KeyboardController::GetInstance()->IsKeyDown(keyMoveForward))
+		position += Vector3(cos(yaw), 0, sin(yaw)) * (float)m_dSpeed * (float)dt;
+	if (KeyboardController::GetInstance()->IsKeyDown(keyMoveBackward))
+		position -= Vector3(cos(yaw), 0, sin(yaw)) * (float)m_dSpeed * (float)dt;
+	if (KeyboardController::GetInstance()->IsKeyDown(keyMoveLeft))
+		position -= Vector3(-sin(yaw), 0, cos(yaw)) * (float)m_dSpeed * (float)dt;
+	if (KeyboardController::GetInstance()->IsKeyDown(keyMoveRight))
+		position += Vector3(-sin(yaw), 0, cos(yaw)) * (float)m_dSpeed * (float)dt;
 
-	// Rotate the view direction
-	if (KeyboardController::GetInstance()->IsKeyDown(VK_LEFT) ||
-		KeyboardController::GetInstance()->IsKeyDown(VK_RIGHT) ||
-		KeyboardController::GetInstance()->IsKeyDown(VK_UP) ||
-		KeyboardController::GetInstance()->IsKeyDown(VK_DOWN))
-	{
-		Vector3 viewUV = (target - position).Normalized();
-		Vector3 rightUV;
-		if (KeyboardController::GetInstance()->IsKeyDown(VK_LEFT))
-		{
-			float yaw = (float)m_dSpeed * (float)dt;
-			Mtx44 rotation;
-			rotation.SetToRotation(yaw, 0, 1, 0);
-			viewUV = rotation * viewUV;
-			target = position + viewUV;
-			rightUV = viewUV.Cross(up);
-			rightUV.y = 0;
-			rightUV.Normalize();
-			up = rightUV.Cross(viewUV).Normalized();
-		}
-		else if (KeyboardController::GetInstance()->IsKeyDown(VK_RIGHT))
-		{
-			float yaw = (float)(-m_dSpeed * (float)dt);
-			Mtx44 rotation;
-			rotation.SetToRotation(yaw, 0, 1, 0);
-			viewUV = rotation * viewUV;
-			target = position + viewUV;
-			rightUV = viewUV.Cross(up);
-			rightUV.y = 0;
-			rightUV.Normalize();
-			up = rightUV.Cross(viewUV).Normalized();
-		}
-		if (KeyboardController::GetInstance()->IsKeyDown(VK_UP))
-		{
-			float pitch = (float)(m_dSpeed * (float)dt);
-			rightUV = viewUV.Cross(up);
-			rightUV.y = 0;
-			rightUV.Normalize();
-			up = rightUV.Cross(viewUV).Normalized();
-			Mtx44 rotation;
-			rotation.SetToRotation(pitch, rightUV.x, rightUV.y, rightUV.z);
-			viewUV = rotation * viewUV;
-			target = position + viewUV;
-		}
-		else if (KeyboardController::GetInstance()->IsKeyDown(VK_DOWN))
-		{
-			float pitch = (float)(-m_dSpeed * (float)dt);
-			rightUV = viewUV.Cross(up);
-			rightUV.y = 0;
-			rightUV.Normalize();
-			up = rightUV.Cross(viewUV).Normalized();
-			Mtx44 rotation;
-			rotation.SetToRotation(pitch, rightUV.x, rightUV.y, rightUV.z);
-			viewUV = rotation * viewUV;
-			target = position + viewUV;
-		}
-	}
+	// Constrain the position
+	Constrain();
+	// Update the target
+	target = position + viewUV;
 
 	//Update the camera direction based on mouse move
 	{
-		Vector3 viewUV = (target - position).Normalized();
-		Vector3 rightUV;
-
-		{
-			float yaw = (float)(-m_dSpeed * camera_yaw * (float)dt);
-			Mtx44 rotation;
-			rotation.SetToRotation(yaw, 0, 1, 0);
-			viewUV = rotation * viewUV;
-			target = position + viewUV;
-			rightUV = viewUV.Cross(up);
-			rightUV.y = 0;
-			rightUV.Normalize();
-			up = rightUV.Cross(viewUV).Normalized();
-		}
-		{
-			float pitch = (float)(-m_dSpeed * camera_pitch * (float)dt);
-			rightUV = viewUV.Cross(up);
-			rightUV.y = 0;
-			rightUV.Normalize();
-			up = rightUV.Cross(viewUV).Normalized();
-			Mtx44 rotation;
-			rotation.SetToRotation(pitch, rightUV.x, rightUV.y, rightUV.z);
-			viewUV = rotation * viewUV;
-			target = position + viewUV;
-		}
+		viewUV.x = cos(yaw) * cos(pitch);
+		viewUV.y = sin(pitch);
+		viewUV.z = sin(yaw) * cos(pitch);
+		up = Vector3(-sin(yaw), 0, cos(yaw)).Cross(viewUV).Normalized();
+		target = position + viewUV;
 	}
 
 	// If the user presses SPACEBAR, then make him jump

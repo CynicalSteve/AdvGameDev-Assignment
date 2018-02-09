@@ -333,6 +333,7 @@ void SceneGame::GameSaveInit()
 void SceneGame::SaveGame()
 {
    CLuaInterface::GetInstance()->saveVector3Value("PlayerPos", playerInfo->GetPos(), "SaveToGameFile", true);
+   theEnemy->Save();
 }
 
 void SceneGame::CreateGameObjects()

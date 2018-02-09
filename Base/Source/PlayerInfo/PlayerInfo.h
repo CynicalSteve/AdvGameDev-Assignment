@@ -113,6 +113,7 @@ public:
 private:
 	Vector3 defaultPosition, defaultTarget, defaultUp;
 	Vector3 position, target, up;
+	float pitch, yaw;
 	Vector3 maxBoundary, minBoundary;
 	GroundEntity* m_pTerrain;
 

@@ -1,6 +1,8 @@
 #pragma once
 #include "../GenericEntity.h"
 #include "../GroundEntity.h"
+#include <vector>
+#include "../PlayerInfo/PlayerInfo.h"
 
 class Mesh;
 
@@ -12,9 +14,15 @@ protected:
 	Vector3 target, up;
 	Vector3 maxBoundary, minBoundary;
 	GroundEntity* m_pTerrain;
+	std::vector<Vector3> Waypoints;
 
 	double m_dSpeed;
-	double m_dAcceleration;
+	int index;
+	enum FSM
+	{
+		patrol,
+		chase
+	} state;
 
 public:
 	CEnemy(void);
@@ -51,4 +59,8 @@ public:
 	void Constrain(void);
 	// Render
 	void Render(void);
+
+	void AddWaypoints(float x, float y, float z);
+	void Save();
+	void Load();
 };

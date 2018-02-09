@@ -3,6 +3,7 @@
 #include "GraphicsManager.h"
 #include "RenderHelper.h"
 #include "../PlayerInfo/PlayerInfo.h"
+#include "../Lua/LuaInterface.h"
 
 CEnemy::CEnemy()
 	: GenericEntity(nullptr)
@@ -24,14 +25,17 @@ CEnemy::~CEnemy()
 
 void CEnemy::Init(void)
 {
+	string originalFile = CLuaInterface::GetInstance()->GetTheLuaStateCurrentFilename();
+	CLuaInterface::GetInstance()->SetLuaFile("Image//GameSaveData.lua", CLuaInterface::GetInstance()->theLuaState);
+
 	// Set the default values
 	defaultPosition.Set(0, 0, 10);
 	defaultTarget.Set(0, 0, 0);
 	defaultUp.Set(0, 1, 0);
 
 	// Set the current values
-	position.Set(10.0f, 0.0f, 0.0f);
-	target.Set(10.0f, 0.0f, 450.0f);
+	position = CLuaInterface::GetInstance()->getVector3Values("EnemyPos");
+	target.Set(0.0f, 0.0f, 0.0f);
 	up.Set(0.0f, 1.0f, 0.0f);
 
 	// Set Boundary
@@ -39,7 +43,7 @@ void CEnemy::Init(void)
 	minBoundary.Set(-1, -1, -1);
 
 	// Set speed
-	m_dSpeed = 1.0;
+	m_dSpeed = 10.0;
 
 	// Initialise the LOD meshes
 	InitLOD("HQAlien", "LQAlien", "cubeSG");
@@ -48,9 +52,20 @@ void CEnemy::Init(void)
 	this->SetCollider(true);
 	this->SetAABB(Vector3(1, 1, 1), Vector3(-1, -1, -1));
 
+	// FSM, waypoints
+	state = patrol;
+	index = CLuaInterface::GetInstance()->getIntValue("NoWaypoints");
+	for (int a = 0; a < index; ++a)
+	{
+		Vector3 point = CLuaInterface::GetInstance()->getVector3Values("Waypoint" + to_string(a));
+		AddWaypoints(point.x, point.y, point.z);
+	}
+	index = CLuaInterface::GetInstance()->getIntValue("WaypointID");
+
 	// Add to EntityManager
 	EntityManager::GetInstance()->AddEntity(this, true);
 
+	CLuaInterface::GetInstance()->SetLuaFile(originalFile, CLuaInterface::GetInstance()->theLuaState);
 }
 
 // Reset this player instance to default
@@ -120,6 +135,35 @@ GroundEntity* CEnemy::GetTerrain(void)
 // Update
 void CEnemy::Update(double dt)
 {
+	if (state == patrol)
+	{
+		if ((CPlayerInfo::GetInstance()->GetPos() - position).LengthSquared() < 300)
+		{
+			state = chase;
+		}
+		else if ((target - position).Length() < m_dSpeed * dt)
+		{
+			cout << index << "\n";
+			if (++index == Waypoints.size())
+				index = 0;
+			target = Waypoints[index];
+		}
+	}
+	else if (state == chase)
+	{
+		if ((CPlayerInfo::GetInstance()->GetPos() - position).LengthSquared() > 500)
+		{
+			for (int a = 0; a < Waypoints.size(); ++a)
+			{
+				if ((Waypoints[a] - position).LengthSquared() <= (Waypoints[index] - position).LengthSquared())
+					index = a;
+			}
+			target = Waypoints[index];
+			state = patrol;
+		}
+		else target = CPlayerInfo::GetInstance()->GetPos();
+	}
+
 	Vector3 viewVector = (target - position).Normalized();
 	position += viewVector * (float)m_dSpeed * (float)dt;
 	//cout << position << "..." << viewVector << endl;
@@ -171,4 +215,26 @@ void CEnemy::Render(void)
 		}
 	}
 	modelStack.PopMatrix();
+}
+
+void CEnemy::AddWaypoints(float x, float y, float z)
+{
+	Waypoints.push_back(Vector3(x, y, z));
+	if (Waypoints.size() == 1)
+		target = Waypoints[0];
+}
+
+void CEnemy::Save()
+{
+	string WaypointList = "Waypoint";
+	CLuaInterface::GetInstance()->saveVector3Value("EnemyPos", position, "SaveToGameFile");
+	CLuaInterface::GetInstance()->saveIntValue("WaypointID", index, "SaveToGameFile");
+	CLuaInterface::GetInstance()->saveIntValue("NoWaypoints", Waypoints.size(), "SaveToGameFile");
+	for (int a = 0; a < Waypoints.size(); ++a)
+		CLuaInterface::GetInstance()->saveVector3Value("Waypoint" + to_string(a), Waypoints[a], "SaveToGameFile");
+}
+
+void CEnemy::Load()
+{
+
 }
